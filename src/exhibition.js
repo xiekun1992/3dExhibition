@@ -30,6 +30,9 @@ scene.add(ground.mesh);
 // 墙
 var wall = new Wall();
 scene.add(wall.group);
+// 门
+var door = new Door();
+scene.add(door.mesh);
 
 function render(){
 	requestAnimationFrame(render);
