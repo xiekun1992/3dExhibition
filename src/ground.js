@@ -5,4 +5,5 @@ function Ground(){
 	this.material = new THREE.MeshPhongMaterial();
 	this.material.map = this.texture;
 	this.mesh = new THREE.Mesh(this.geometry, this.material);
+	this.mesh.receiveShadow = true;
 }

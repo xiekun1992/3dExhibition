@@ -9,6 +9,7 @@ camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize(width, height);
+renderer.setClearColor(0xffffff);
 renderer.shadowMapEnabled = true;
 
 var clock = new THREE.Clock();
@@ -28,11 +29,11 @@ camControls.zoomSpeed = 1;
 camControls.panSpeed = 1;
 camControls.staticMoing = true;
 
-var amLight = new THREE.AmbientLight(0x404040);
+var amLight = new THREE.AmbientLight(0x555555);
 scene.add(amLight);
 
 var spotLight = new THREE.SpotLight(0xffffff, 1);
-spotLight.position.set(0, 200, 0);
+spotLight.position.set(0, 10, 0);
 spotLight.castShadow = true;
 scene.add(spotLight);
 
@@ -49,6 +50,10 @@ scene.add(wall.group);
 // 门
 var door = new Door();
 scene.add(door.mesh);
+// 工作区
+var workplace = new Workplace();
+workplace.group.position.set(0, -0.5, 0);
+scene.add(workplace.group);
 
 function render(){
 	camControls.update(clock.getDelta());
