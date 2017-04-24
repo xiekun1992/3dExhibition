@@ -51,9 +51,78 @@ scene.add(wall.group);
 var door = new Door();
 scene.add(door.mesh);
 // 工作区
-var workplace = new Workplace();
-workplace.group.position.set(0, -0.5, 0);
-scene.add(workplace.group);
+// 靠窗、前面的工作区
+var wpWindowfront = new THREE.Group();
+var wp1 = new THREE.Group();
+var workplace1 = new Workplace();
+workplace1.group.position.set(0, -0.5, 0);
+wp1.add(workplace1.group);
+
+var workplace2 = new Workplace();
+workplace2.group.position.set(-3, -0.5, 1);
+workplace2.group.rotation.y = -0.5 * Math.PI;
+wp1.add(workplace2.group);
+
+wp1.position.set(-1, 0, 4);
+
+var wp2 = new THREE.Group();
+var workplace1 = new Workplace();
+workplace1.group.position.set(0, -0.5, 0);
+
+var workplace2 = new Workplace();
+workplace2.group.position.set(-3, -0.5, 1);
+workplace2.group.rotation.y = -0.5 * Math.PI;
+
+wp2.add(workplace1.group);
+wp2.add(workplace2.group);
+
+wp2.position.set(-5, 0, 6);
+wp2.rotation.y = Math.PI;
+
+wpWindowfront.add(wp1);
+wpWindowfront.add(wp2);
+
+scene.add(wpWindowfront);
+
+
+// 靠窗、后面的工作区
+var wpWindowback = new THREE.Group();
+var wp1 = new THREE.Group();
+var workplace1 = new Workplace();
+workplace1.group.position.set(0, -0.5, 0);
+wp1.add(workplace1.group);
+
+var workplace2 = new Workplace();
+workplace2.group.position.set(-3, -0.5, 1);
+workplace2.group.rotation.y = -0.5 * Math.PI;
+wp1.add(workplace2.group);
+
+wp1.position.set(-1, 0, 4);
+
+var wp2 = new THREE.Group();
+var workplace1 = new Workplace();
+workplace1.group.position.set(0, -0.5, 0);
+
+var workplace2 = new Workplace();
+workplace2.group.position.set(-3, -0.5, 1);
+workplace2.group.rotation.y = -0.5 * Math.PI;
+
+wp2.add(workplace1.group);
+wp2.add(workplace2.group);
+
+wp2.position.set(-5, 0, 6);
+wp2.rotation.y = Math.PI;
+
+wpWindowback.add(wp1);
+wpWindowback.add(wp2);
+
+wpWindowback.position.set(0, 0, -6);
+
+scene.add(wpWindowback);
+
+
+
+
 
 function render(){
 	camControls.update(clock.getDelta());
