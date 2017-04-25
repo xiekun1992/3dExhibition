@@ -40,7 +40,7 @@ scene.add(spotLight);
 document.body.appendChild(renderer.domElement);
 // 地板
 var ground = new Ground();
-ground.mesh.position.set(0, -1, 0);
+ground.mesh.position.set(0, -1, 1.1);
 ground.mesh.rotation.z = -0.5 * Math.PI;
 ground.mesh.receieveShadow = true;
 scene.add(ground.mesh);
@@ -63,7 +63,7 @@ workplace2.group.position.set(-3, -0.5, 1);
 workplace2.group.rotation.y = -0.5 * Math.PI;
 wp1.add(workplace2.group);
 
-wp1.position.set(-1, 0, 4);
+wp1.position.set(-1, 0, 3);
 
 var wp2 = new THREE.Group();
 var workplace1 = new Workplace();
@@ -76,7 +76,7 @@ workplace2.group.rotation.y = -0.5 * Math.PI;
 wp2.add(workplace1.group);
 wp2.add(workplace2.group);
 
-wp2.position.set(-5, 0, 6);
+wp2.position.set(-5, 0, 5);
 wp2.rotation.y = Math.PI;
 
 wpWindowfront.add(wp1);
@@ -116,9 +116,36 @@ wp2.rotation.y = Math.PI;
 wpWindowback.add(wp1);
 wpWindowback.add(wp2);
 
-wpWindowback.position.set(0, 0, -6);
+wpWindowback.position.set(0, 0, -7);
 
 scene.add(wpWindowback);
+
+// 靠走廊、前面的工作区
+var wp1 = new THREE.Group();
+var workplace1 = new Workplace();
+workplace1.group.position.set(0, -0.5, 0);
+wp1.add(workplace1.group);
+
+var workplace2 = new Workplace();
+workplace2.group.position.set(-3, -0.5, 1);
+workplace2.group.rotation.y = -0.5 * Math.PI;
+wp1.add(workplace2.group);
+
+wp1.position.set(4.25, 0, -1.3);
+wp1.rotation.y = 0.5 * Math.PI;
+
+scene.add(wp1);
+
+// 靠走廊、后面的工作区
+var wp1 = new THREE.Group();
+var workplace1 = new Workplace();
+workplace1.group.position.set(0, -0.5, 0);
+wp1.add(workplace1.group);
+
+wp1.position.set(5.25, 0, -4.1);
+// wp1.rotation.y = 0.5 * Math.PI;
+
+scene.add(wp1);
 
 
 
