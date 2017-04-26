@@ -82,6 +82,8 @@ wp2.rotation.y = Math.PI;
 wpWindowfront.add(wp1);
 wpWindowfront.add(wp2);
 
+wpWindowfront.position.set(0.1, 0, 0);
+
 scene.add(wpWindowfront);
 
 
@@ -116,7 +118,7 @@ wp2.rotation.y = Math.PI;
 wpWindowback.add(wp1);
 wpWindowback.add(wp2);
 
-wpWindowback.position.set(0, 0, -7);
+wpWindowback.position.set(0.1, 0, -7);
 
 scene.add(wpWindowback);
 
