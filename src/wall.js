@@ -36,8 +36,8 @@ function Wall(){
 	this.pillar2Mesh = new THREE.Mesh(this.pillar2, this.material);
 	this.pillar3Mesh = new THREE.Mesh(this.pillar3, this.material);
 
-	this.pillar1Mesh.position.set(-3, 0, -5.05);
-	this.pillar2Mesh.position.set(-3, 0, 7.25);
+	this.pillar1Mesh.position.set(-3.75, 0, -5.05);
+	this.pillar2Mesh.position.set(-3.75, 0, 7.25);
 	this.pillar3Mesh.position.set(5, 0, 6.5);
 
 
