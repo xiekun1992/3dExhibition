@@ -52,102 +52,102 @@ var door = new Door();
 scene.add(door.mesh);
 // 工作区
 // 靠窗、前面的工作区
-var wpWindowfront = new THREE.Group();
-var wp1 = new THREE.Group();
-var workplace1 = new Workplace();
-workplace1.group.position.set(0, -0.5, 0);
-wp1.add(workplace1.group);
+// var wpWindowfront = new THREE.Group();
+// var wp1 = new THREE.Group();
+// var workplace1 = new Workplace();
+// workplace1.group.position.set(0, -0.5, 0);
+// wp1.add(workplace1.group);
 
-var workplace2 = new Workplace();
-workplace2.group.position.set(-3, -0.5, 1);
-workplace2.group.rotation.y = -0.5 * Math.PI;
-wp1.add(workplace2.group);
+// var workplace2 = new Workplace();
+// workplace2.group.position.set(-3, -0.5, 1);
+// workplace2.group.rotation.y = -0.5 * Math.PI;
+// wp1.add(workplace2.group);
 
-wp1.position.set(-1, 0, 3);
+// wp1.position.set(-1, 0, 3);
 
-var wp2 = new THREE.Group();
-var workplace1 = new Workplace();
-workplace1.group.position.set(0, -0.5, 0);
+// var wp2 = new THREE.Group();
+// var workplace1 = new Workplace();
+// workplace1.group.position.set(0, -0.5, 0);
 
-var workplace2 = new Workplace();
-workplace2.group.position.set(-3, -0.5, 1);
-workplace2.group.rotation.y = -0.5 * Math.PI;
+// var workplace2 = new Workplace();
+// workplace2.group.position.set(-3, -0.5, 1);
+// workplace2.group.rotation.y = -0.5 * Math.PI;
 
-wp2.add(workplace1.group);
-wp2.add(workplace2.group);
+// wp2.add(workplace1.group);
+// wp2.add(workplace2.group);
 
-wp2.position.set(-5, 0, 5);
-wp2.rotation.y = Math.PI;
+// wp2.position.set(-5, 0, 5);
+// wp2.rotation.y = Math.PI;
 
-wpWindowfront.add(wp1);
-wpWindowfront.add(wp2);
+// wpWindowfront.add(wp1);
+// wpWindowfront.add(wp2);
 
-wpWindowfront.position.set(0.1, 0, 0);
+// wpWindowfront.position.set(0.1, 0, 0);
 
-scene.add(wpWindowfront);
+// scene.add(wpWindowfront);
 
 
-// 靠窗、后面的工作区
-var wpWindowback = new THREE.Group();
-var wp1 = new THREE.Group();
-var workplace1 = new Workplace();
-workplace1.group.position.set(0, -0.5, 0);
-wp1.add(workplace1.group);
+// // 靠窗、后面的工作区
+// var wpWindowback = new THREE.Group();
+// var wp1 = new THREE.Group();
+// var workplace1 = new Workplace();
+// workplace1.group.position.set(0, -0.5, 0);
+// wp1.add(workplace1.group);
 
-var workplace2 = new Workplace();
-workplace2.group.position.set(-3, -0.5, 1);
-workplace2.group.rotation.y = -0.5 * Math.PI;
-wp1.add(workplace2.group);
+// var workplace2 = new Workplace();
+// workplace2.group.position.set(-3, -0.5, 1);
+// workplace2.group.rotation.y = -0.5 * Math.PI;
+// wp1.add(workplace2.group);
 
-wp1.position.set(-1, 0, 4);
+// wp1.position.set(-1, 0, 4);
 
-var wp2 = new THREE.Group();
-var workplace1 = new Workplace();
-workplace1.group.position.set(0, -0.5, 0);
+// var wp2 = new THREE.Group();
+// var workplace1 = new Workplace();
+// workplace1.group.position.set(0, -0.5, 0);
 
-var workplace2 = new Workplace();
-workplace2.group.position.set(-3, -0.5, 1);
-workplace2.group.rotation.y = -0.5 * Math.PI;
+// var workplace2 = new Workplace();
+// workplace2.group.position.set(-3, -0.5, 1);
+// workplace2.group.rotation.y = -0.5 * Math.PI;
 
-wp2.add(workplace1.group);
-wp2.add(workplace2.group);
+// wp2.add(workplace1.group);
+// wp2.add(workplace2.group);
 
-wp2.position.set(-5, 0, 6);
-wp2.rotation.y = Math.PI;
+// wp2.position.set(-5, 0, 6);
+// wp2.rotation.y = Math.PI;
 
-wpWindowback.add(wp1);
-wpWindowback.add(wp2);
+// wpWindowback.add(wp1);
+// wpWindowback.add(wp2);
 
-wpWindowback.position.set(0.1, 0, -7);
+// wpWindowback.position.set(0.1, 0, -7);
 
-scene.add(wpWindowback);
+// scene.add(wpWindowback);
 
-// 靠走廊、前面的工作区
-var wp1 = new THREE.Group();
-var workplace1 = new Workplace();
-workplace1.group.position.set(0, -0.5, 0);
-wp1.add(workplace1.group);
+// // 靠走廊、前面的工作区
+// var wp1 = new THREE.Group();
+// var workplace1 = new Workplace();
+// workplace1.group.position.set(0, -0.5, 0);
+// wp1.add(workplace1.group);
 
-var workplace2 = new Workplace();
-workplace2.group.position.set(-3, -0.5, 1);
-workplace2.group.rotation.y = -0.5 * Math.PI;
-wp1.add(workplace2.group);
+// var workplace2 = new Workplace();
+// workplace2.group.position.set(-3, -0.5, 1);
+// workplace2.group.rotation.y = -0.5 * Math.PI;
+// wp1.add(workplace2.group);
 
-wp1.position.set(4.25, 0, -1.3);
-wp1.rotation.y = 0.5 * Math.PI;
-
-scene.add(wp1);
-
-// 靠走廊、后面的工作区
-var wp1 = new THREE.Group();
-var workplace1 = new Workplace();
-workplace1.group.position.set(0, -0.5, 0);
-wp1.add(workplace1.group);
-
-wp1.position.set(5.25, 0, -4.1);
+// wp1.position.set(4.25, 0, -1.3);
 // wp1.rotation.y = 0.5 * Math.PI;
 
-scene.add(wp1);
+// scene.add(wp1);
+
+// // 靠走廊、后面的工作区
+// var wp1 = new THREE.Group();
+// var workplace1 = new Workplace();
+// workplace1.group.position.set(0, -0.5, 0);
+// wp1.add(workplace1.group);
+
+// wp1.position.set(5.25, 0, -4.1);
+// // wp1.rotation.y = 0.5 * Math.PI;
+
+// scene.add(wp1);
 
 
 

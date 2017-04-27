@@ -10,6 +10,6 @@ function Ground(){
 	this.material.map = this.texture;
 	this.mesh = new THREE.Mesh(this.geometry, this.material);
 	this.mesh.material.map.repeat.set(2, 2);
-
+	console.log(this.mesh)
 	this.mesh.receiveShadow = true;
 }
