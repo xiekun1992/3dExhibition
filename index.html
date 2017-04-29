@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<base href="/">
 	<meta charset="UTF-8">
 	<title>3d exhibition</title>
 	<style>
@@ -15,11 +16,10 @@
 	<script src="./libs/TrackballControls.js"></script>
 	<script src="./libs/ThreeBSP.js"></script>
 	
-	<script src="./src/ground.js"></script>
-	<script src="./src/wall.js"></script>
-	<script src="./src/door.js"></script>
-	<script src="./src/workplace.js"></script>
-
-	<script src="./src/exhibition.js"></script>
+	<script src="./libs/require.js"></script>
+	<script>
+	requirejs.config({baseUrl: '/src'});
+	require(['Exhibition']);
+	</script>
 </body>
 </html>
