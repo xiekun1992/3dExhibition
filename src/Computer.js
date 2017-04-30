@@ -54,12 +54,55 @@ define('Computer', [], function(){
 	}
 	// 键盘
 	function Keyboard(){
-		this.geometry = new THREE.BoxGeometry(5, 0.1, 1.2);
+		this.geometry = new THREE.BoxGeometry(5, 0.1, 1.6);
 		this.mesh = new THREE.Mesh(this.geometry, material);
 	}
 	// 鼠标
 	function Mouse(){
+		this.group = new THREE.Group();
+
+		this.geometry = new THREE.BoxGeometry(1, 0.5, 2);
+		this.mouseMesh = new THREE.Mesh(this.geometry, material);
+
+		this.wheelGeometry = new THREE.TorusGeometry(0.06, 0.06, 40, 40, Math.PI);
+		var mWheelMaterial = new THREE.MeshLambertMaterial({color: 0xF35656});
+		this.wheelMesh = new THREE.Mesh(this.wheelGeometry, mWheelMaterial);
+		this.wheelMesh.position.set(0, 0.06, -0.4);
+		this.wheelMesh.rotation.y = 0.5 * Math.PI;
+		this.wheelMesh.rotation.x = -0.2 * Math.PI;
+
+		this.meshBSP = new ThreeBSP(this.mouseMesh);
 		
+		var sphere1 = new THREE.SphereGeometry(1, 40, 40, 0, Math.PI * 2, 0, Math.PI);
+		var m1 = new THREE.MeshBasicMaterial({wireframe: true});
+		var sphere1Mesh = new THREE.Mesh(sphere1, m1);
+		sphere1Mesh.position.set(0, -0.8, 0);
+		var sphere1BSP = new ThreeBSP(sphere1Mesh);
+		
+		var sphere2Mesh = new THREE.Mesh(sphere1, m1);
+		sphere2Mesh.position.set(0.4, 0, 0);
+		var sphere2BSP = new ThreeBSP(sphere2Mesh);
+
+		var sphere3Mesh = new THREE.Mesh(sphere1, m1);
+		sphere3Mesh.position.set(-0.4, 0, 0);
+		var sphere3BSP = new ThreeBSP(sphere3Mesh);
+
+		var sphere4Mesh = new THREE.Mesh(sphere1, m1);
+		sphere4Mesh.position.set(0, 0, 0.2);
+		var sphere4BSP = new ThreeBSP(sphere4Mesh);
+
+		var tmpMesh = sphere1BSP.intersect(this.meshBSP);
+		tmpMesh = sphere2BSP.intersect(tmpMesh);
+		tmpMesh = sphere3BSP.intersect(tmpMesh);
+		tmpMesh = sphere4BSP.intersect(tmpMesh);
+
+		this.mesh = tmpMesh.toMesh();
+		this.mesh.material = material;
+		this.mesh.geometry.computeFaceNormals();
+		this.mesh.geometry.computeVertexNormals();
+
+		this.group.add(this.mesh);
+		this.group.add(this.wheelMesh);
 	}
 	// 机箱
 	function Case(){
@@ -67,18 +110,18 @@ define('Computer', [], function(){
 		this.mesh = new THREE.Mesh(this.geometry, material);
 	}
 	return function Computer(){
-		// this.geometry = new THREE.BoxGeometry(4, 4, 4);
-		// this.material = new THREE.MeshLambertMaterial({color: 0x555555});
-		// this.mesh = new THREE.Mesh(this.geometry, this.material);
 		this.group = new THREE.Group();
 		var monitor = new Monitor();
 		var keyboard = new Keyboard();
 		keyboard.mesh.position.set(0, -3, 2);
 		var computerCase = new Case();
 		computerCase.mesh.position.set(-5, -1, 1);
+		var mouse = new Mouse();
+		mouse.group.position.set(4, -3, 2);
 
 		this.group.add(monitor.group);
 		this.group.add(keyboard.mesh);
 		this.group.add(computerCase.mesh);
+		this.group.add(mouse.group);
 	};
 });
