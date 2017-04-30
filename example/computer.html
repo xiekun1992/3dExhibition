@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>computer</title>
+	<style>
+		body{
+			margin: 0;
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body>
+	<script src="../libs/three.js"></script>
+	<!-- // <script src="./libs/FirstPersonControls.js"></script> -->
+	<script src="../libs/TrackballControls.js"></script>
+	<script src="../libs/ThreeBSP.js"></script>
+
+	<script src="../libs/require.js"></script>
+	<script>
+	requirejs.config({
+		baseUrl: '/src',
+		paths: {
+			Test: '../example/js/test'
+		}
+	});
+	require(['Test','Computer'], function(Test, Computer){
+		var computer = new Computer();
+		computer.group.position.set(0, 0, 0);
+
+		var tt = new Test();
+		tt.scene.add(computer.group);
+		tt.action = function(){
+			// computer.group.rotation.x += 0.01;
+		};
+		tt.render();
+	});
+	</script>
+</body>
+</html>

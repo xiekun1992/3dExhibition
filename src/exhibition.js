@@ -28,7 +28,7 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace'], function(Ground, D
 	camControls.rotateSpeed = 1;
 	camControls.zoomSpeed = 1;
 	camControls.panSpeed = 1;
-	camControls.staticMoing = true;
+	camControls.staticMoving = true;
 
 	var amLight = new THREE.AmbientLight(0x555555);
 	scene.add(amLight);
