@@ -48,10 +48,15 @@ define('Workplace', [], function(){
 			resultMesh.geometry.computeVertexNormals();
 
 			resultMesh.castShadow = true;
+			resultMesh.receiveShadow = true;
 			this.mesh1.castShadow = true;
+			this.mesh1.receiveShadow = true;
 			this.mesh2.castShadow = true;
+			this.mesh2.receiveShadow = true;
 			this.shortMesh1.castShadow = true;
+			this.shortMesh1.receiveShadow = true;
 			this.shortMesh2.castShadow = true;
+			this.shortMesh2.receiveShadow = true;
 
 			this.group.add(this.mesh1);
 			this.group.add(this.mesh2);

@@ -7,18 +7,19 @@
 	<style>
 	body{
 		margin: 0;
+		overflow: hidden;
 	}
 	</style>
 </head>
 <body>
 	<script src="./libs/three.js"></script>
-	<!-- // <script src="./libs/FirstPersonControls.js"></script> -->
+	<script src="./libs/FirstPersonControls.js"></script>
 	<script src="./libs/TrackballControls.js"></script>
 	<script src="./libs/ThreeBSP.js"></script>
 	
 	<script src="./libs/require.js"></script>
 	<script>
-	requirejs.config({baseUrl: '/src'});
+	requirejs.config({baseUrl: './src'});
 	require(['Exhibition']);
 	</script>
 </body>

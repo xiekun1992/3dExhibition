@@ -1,14 +1,15 @@
-define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace'], function(Ground, Door, Wall, Workplace){
+define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer'], function(Ground, Door, Wall, Workplace, Computer){
 	var width = window.innerWidth,
 		height = window.innerHeight;
 
 
 	var scene = new THREE.Scene();
 	var camera = new THREE.PerspectiveCamera(45, width / height, 0.1 ,1000);
-	camera.position.set(0, 10, 10);
+	camera.position.set(0, 0, 10);
 	camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-	var renderer = new THREE.WebGLRenderer();
+	var renderer = new THREE.WebGLRenderer({antiAlias: true});
+	renderer.shadowMapType=THREE.PCFSoftShadowMap;
 	renderer.setSize(width, height);
 	renderer.setClearColor(0xffffff);
 	renderer.shadowMapEnabled = true;
@@ -33,8 +34,8 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace'], function(Ground, D
 	var amLight = new THREE.AmbientLight(0x555555);
 	scene.add(amLight);
 
-	var spotLight = new THREE.SpotLight(0xffffff, 1);
-	spotLight.position.set(0, 10, 0);
+	var spotLight = new THREE.SpotLight(0xdddddd, 1);
+	spotLight.position.set(0, 20, 0);
 	spotLight.castShadow = true;
 	scene.add(spotLight);
 
@@ -51,37 +52,56 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace'], function(Ground, D
 	// 门
 	var door = new Door();
 	scene.add(door.mesh);
+
+
+	// 工位电脑
+	function createPC(position){
+		var computer = new Computer(0.1);
+		computer.computerCase.mesh.position.set(-0.5, -0.6, 0.3);
+		computer.computerCase.mesh.rotation.y = 0.76 * Math.PI;
+
+		computer.group.position.set(-0.5, -0.2, 0.5);
+		// computer.group.position.set(position.x - 0.5, -0.2, position.z + 0.5);
+		computer.group.rotation.y = -0.75 * Math.PI;
+		return computer.group;
+	}
 	// 工作区
+	function createWorkspace(position, rotation){
+		var workplaceGroup = new THREE.Group();
+		var workplace = new Workplace();
+		var pc = createPC(position);
+		workplace.group.position.set(0, -0.5, 0);
+
+		workplaceGroup.add(pc);
+		workplaceGroup.add(workplace.group);
+		
+		if(rotation){
+			workplaceGroup.rotation.x = rotation.x || 0;
+			workplaceGroup.rotation.y = rotation.y || 0;
+			workplaceGroup.rotation.z = rotation.z || 0;
+		}
+		workplaceGroup.position.set(position.x, position.y, position.z);
+		return workplaceGroup;
+	}
 	// 靠窗、前面的工作区
 	var wpWindowfront = new THREE.Group();
 	var wp1 = new THREE.Group();
-	var workplace1 = new Workplace();
-	workplace1.group.position.set(0, -0.5, 0);
-	wp1.add(workplace1.group);
-
-	var workplace2 = new Workplace();
-	workplace2.group.position.set(-3, -0.5, 1);
-	workplace2.group.rotation.y = -0.5 * Math.PI;
-	wp1.add(workplace2.group);
+	
+	wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
+	wp1.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
 
 	wp1.position.set(-1, 0, 3);
+	wpWindowfront.add(wp1);
 
 	var wp2 = new THREE.Group();
-	var workplace1 = new Workplace();
-	workplace1.group.position.set(0, -0.5, 0);
 
-	var workplace2 = new Workplace();
-	workplace2.group.position.set(-3, -0.5, 1);
-	workplace2.group.rotation.y = -0.5 * Math.PI;
-
-	wp2.add(workplace1.group);
-	wp2.add(workplace2.group);
+	wp2.add(createWorkspace({x: 0, y: 0, z: 0}));
+	wp2.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
 
 	wp2.position.set(-5, 0, 5);
 	wp2.rotation.y = Math.PI;
-
-	wpWindowfront.add(wp1);
 	wpWindowfront.add(wp2);
+
 
 	wpWindowfront.position.set(0.1, 0, 0);
 
@@ -91,27 +111,15 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace'], function(Ground, D
 	// 靠窗、后面的工作区
 	var wpWindowback = new THREE.Group();
 	var wp1 = new THREE.Group();
-	var workplace1 = new Workplace();
-	workplace1.group.position.set(0, -0.5, 0);
-	wp1.add(workplace1.group);
 
-	var workplace2 = new Workplace();
-	workplace2.group.position.set(-3, -0.5, 1);
-	workplace2.group.rotation.y = -0.5 * Math.PI;
-	wp1.add(workplace2.group);
+	wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
+	wp1.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
 
 	wp1.position.set(-1, 0, 4);
 
 	var wp2 = new THREE.Group();
-	var workplace1 = new Workplace();
-	workplace1.group.position.set(0, -0.5, 0);
-
-	var workplace2 = new Workplace();
-	workplace2.group.position.set(-3, -0.5, 1);
-	workplace2.group.rotation.y = -0.5 * Math.PI;
-
-	wp2.add(workplace1.group);
-	wp2.add(workplace2.group);
+	wp2.add(createWorkspace({x: 0, y: 0, z: 0}));
+	wp2.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
 
 	wp2.position.set(-5, 0, 6);
 	wp2.rotation.y = Math.PI;
@@ -125,14 +133,8 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace'], function(Ground, D
 
 	// 靠走廊、前面的工作区
 	var wp1 = new THREE.Group();
-	var workplace1 = new Workplace();
-	workplace1.group.position.set(0, -0.5, 0);
-	wp1.add(workplace1.group);
-
-	var workplace2 = new Workplace();
-	workplace2.group.position.set(-3, -0.5, 1);
-	workplace2.group.rotation.y = -0.5 * Math.PI;
-	wp1.add(workplace2.group);
+	wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
+	wp1.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
 
 	wp1.position.set(4.25, 0, -1.3);
 	wp1.rotation.y = 0.5 * Math.PI;
@@ -141,12 +143,9 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace'], function(Ground, D
 
 	// 靠走廊、后面的工作区
 	var wp1 = new THREE.Group();
-	var workplace1 = new Workplace();
-	workplace1.group.position.set(0, -0.5, 0);
-	wp1.add(workplace1.group);
+	wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
 
 	wp1.position.set(5.25, 0, -4.1);
-	// wp1.rotation.y = 0.5 * Math.PI;
 
 	scene.add(wp1);
 
@@ -160,4 +159,11 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace'], function(Ground, D
 		renderer.render(scene, camera);
 	}
 	render();
+
+	function onResize(){
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+	}
+	window.addEventListener('resize', onResize, false);
 });
