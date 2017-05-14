@@ -35,7 +35,7 @@ define('Test', [], function(){
 		this.scene.add(amLight);
 
 		var spotLight = new THREE.SpotLight(0xffffff, 1);
-		spotLight.position.set(0, 10, 0);
+		spotLight.position.set(0, 10, 10);
 		spotLight.castShadow = true;
 		this.scene.add(spotLight);
 
