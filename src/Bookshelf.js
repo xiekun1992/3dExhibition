@@ -1,5 +1,5 @@
 define('Bookshelf', [], function(){
-	var material = new THREE.MeshLambertMaterial({color: 0xcccccc});
+	var material = new THREE.MeshLambertMaterial({color: 0xefefef});
 	var thick = 0.02;
 	function Side(){
 		this.geometry = new THREE.BoxGeometry(thick, 1.6, 1);
@@ -18,6 +18,9 @@ define('Bookshelf', [], function(){
 		this.mesh.material = material;
 		this.mesh.geometry.computeVertexNormals();
 		this.mesh.geometry.computeFaceNormals();
+
+		this.mesh.castShadow = true;
+		this.mesh.recieveShadow = true;
 	}
 
 	function Bookshelf(){
@@ -35,6 +38,13 @@ define('Bookshelf', [], function(){
 		this.frontMesh.position.set(0, 0, 0);
 		this.backMesh.position.set(0, 0.5, -1);
 		this.bottomMesh.position.set(0, -0.3 + thick / 2, -0.5);
+
+		this.frontMesh.castShadow = true;
+		this.frontMesh.recieveShadow = true;
+		this.backMesh.castShadow = true;
+		this.backMesh.recieveShadow = true;
+		this.bottomMesh.castShadow = true;
+		this.bottomMesh.recieveShadow = true;
 
 		this.group.add(this.frontMesh);
 		this.group.add(this.backMesh);
@@ -55,6 +65,8 @@ define('Bookshelf', [], function(){
 		this.group.add(this.side3.mesh);
 		this.group.add(this.side4.mesh);
 
+		this.group.recieveShadow = true;
+		this.group.castShadow = true;
 	}
 	return Bookshelf;
 });

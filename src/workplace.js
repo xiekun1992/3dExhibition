@@ -1,7 +1,7 @@
 define('Workplace', [], function(){
 	return function Workplace(){
 			this.group = new THREE.Group();
-			this.material = new THREE.MeshLambertMaterial({color: 0x3da1ff});
+			this.material = new THREE.MeshLambertMaterial({color: 0x4aa3f5});
 			this.deskMaterial = new THREE.MeshLambertMaterial({color: 0xbbbbbb});
 
 			this.geometry = new THREE.BoxGeometry(0.05, 1, 2);

@@ -1,7 +1,6 @@
-define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabinet'], function(Ground, Door, Wall, Workplace, Computer, Cabinet){
+define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabinet', 'Bookshelf', 'TrashCan'], function(Ground, Door, Wall, Workplace, Computer, Cabinet, Bookshelf, TrashCan){
 	var width = window.innerWidth,
 		height = window.innerHeight;
-
 
 	var scene = new THREE.Scene();
 	var camera = new THREE.PerspectiveCamera(45, width / height, 0.1 ,1000);
@@ -35,7 +34,7 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	scene.add(amLight);
 
 	var spotLight = new THREE.SpotLight(0xdddddd, 1);
-	spotLight.position.set(0, 20, 0);
+	spotLight.position.set(0, 15, 0);
 	spotLight.castShadow = true;
 	scene.add(spotLight);
 
@@ -53,9 +52,23 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	var door = new Door();
 	scene.add(door.mesh);
 
-
+	// 垃圾桶
+	function createTrashCan(){
+		var trashCan = new TrashCan();
+		trashCan.group.scale.set(0.05, 0.05, 0.05);
+		trashCan.group.position.set(-1.5, -0.9, 0.6);
+		return trashCan.group;
+	}
+	// 书架
+	function createBookshelf(){
+		var bookshelf = new Bookshelf();
+		bookshelf.group.scale.set(0.2, 0.24, 0.24);
+		bookshelf.group.rotation.y = -0.5 * Math.PI;
+		bookshelf.group.position.set(-0.27, -0.41, -0.5);
+		return bookshelf.group;
+	}
 	// 工作柜
-	function createCabinet(scale){
+	function createCabinet(){
 		var cabinet = new Cabinet();
 		cabinet.group.scale.set(0.2, 0.2, 0.25);
 		cabinet.group.position.set(-0.31, -0.58, -0.7);
@@ -79,10 +92,15 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		var workplace = new Workplace();
 		var pc = createPC();
 		var cabinet = createCabinet();
+		var bookshelf = new createBookshelf();
+		var trashCan = new createTrashCan();
+
 		workplace.group.position.set(0, -0.5, 0);
 
 		workplaceGroup.add(pc);
 		workplaceGroup.add(cabinet);
+		workplaceGroup.add(bookshelf);
+		workplaceGroup.add(trashCan);
 		workplaceGroup.add(workplace.group);
 		
 		if(rotation){
