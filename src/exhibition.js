@@ -1,4 +1,4 @@
-define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer'], function(Ground, Door, Wall, Workplace, Computer){
+define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabinet'], function(Ground, Door, Wall, Workplace, Computer, Cabinet){
 	var width = window.innerWidth,
 		height = window.innerHeight;
 
@@ -54,8 +54,16 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer'], functi
 	scene.add(door.mesh);
 
 
+	// 工作柜
+	function createCabinet(scale){
+		var cabinet = new Cabinet();
+		cabinet.group.scale.set(0.2, 0.2, 0.25);
+		cabinet.group.position.set(-0.31, -0.58, -0.7);
+		cabinet.group.rotation.y = -0.5 * Math.PI;
+		return cabinet.group;
+	}
 	// 工位电脑
-	function createPC(position){
+	function createPC(){
 		var computer = new Computer(0.1);
 		computer.computerCase.mesh.position.set(-0.5, -0.6, 0.3);
 		computer.computerCase.mesh.rotation.y = 0.76 * Math.PI;
@@ -69,10 +77,12 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer'], functi
 	function createWorkspace(position, rotation){
 		var workplaceGroup = new THREE.Group();
 		var workplace = new Workplace();
-		var pc = createPC(position);
+		var pc = createPC();
+		var cabinet = createCabinet();
 		workplace.group.position.set(0, -0.5, 0);
 
 		workplaceGroup.add(pc);
+		workplaceGroup.add(cabinet);
 		workplaceGroup.add(workplace.group);
 		
 		if(rotation){
@@ -80,7 +90,7 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer'], functi
 			workplaceGroup.rotation.y = rotation.y || 0;
 			workplaceGroup.rotation.z = rotation.z || 0;
 		}
-		workplaceGroup.position.set(position.x, position.y, position.z);
+		workplaceGroup.position.set(position.x, position.y + 0.05, position.z);
 		return workplaceGroup;
 	}
 	// 靠窗、前面的工作区
