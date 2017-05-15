@@ -30,7 +30,7 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	camControls.panSpeed = 1;
 	camControls.staticMoving = true;
 
-	var amLight = new THREE.AmbientLight(0x555555);
+	var amLight = new THREE.AmbientLight(0x888888);
 	scene.add(amLight);
 
 	var spotLight = new THREE.SpotLight(0xdddddd, 1);
@@ -50,7 +50,8 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	scene.add(wall.group);
 	// 门
 	var door = new Door();
-	scene.add(door.mesh);
+	door.group.position.set(5.29, -0.1, 4);
+	scene.add(door.group);
 
 	// 垃圾桶
 	function createTrashCan(){
@@ -111,71 +112,71 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		workplaceGroup.position.set(position.x, position.y + 0.05, position.z);
 		return workplaceGroup;
 	}
-	// 靠窗、前面的工作区
-	var wpWindowfront = new THREE.Group();
-	var wp1 = new THREE.Group();
+	// // 靠窗、前面的工作区
+	// var wpWindowfront = new THREE.Group();
+	// var wp1 = new THREE.Group();
 	
-	wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
-	wp1.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
+	// wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
+	// wp1.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
 
-	wp1.position.set(-1, 0, 3);
-	wpWindowfront.add(wp1);
+	// wp1.position.set(-1, 0, 3);
+	// wpWindowfront.add(wp1);
 
-	var wp2 = new THREE.Group();
+	// var wp2 = new THREE.Group();
 
-	wp2.add(createWorkspace({x: 0, y: 0, z: 0}));
-	wp2.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
+	// wp2.add(createWorkspace({x: 0, y: 0, z: 0}));
+	// wp2.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
 
-	wp2.position.set(-5, 0, 5);
-	wp2.rotation.y = Math.PI;
-	wpWindowfront.add(wp2);
-
-
-	wpWindowfront.position.set(0.1, 0, 0);
-
-	scene.add(wpWindowfront);
+	// wp2.position.set(-5, 0, 5);
+	// wp2.rotation.y = Math.PI;
+	// wpWindowfront.add(wp2);
 
 
-	// 靠窗、后面的工作区
-	var wpWindowback = new THREE.Group();
-	var wp1 = new THREE.Group();
+	// wpWindowfront.position.set(0.1, 0, 0);
 
-	wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
-	wp1.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
+	// scene.add(wpWindowfront);
 
-	wp1.position.set(-1, 0, 4);
 
-	var wp2 = new THREE.Group();
-	wp2.add(createWorkspace({x: 0, y: 0, z: 0}));
-	wp2.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
+	// // 靠窗、后面的工作区
+	// var wpWindowback = new THREE.Group();
+	// var wp1 = new THREE.Group();
 
-	wp2.position.set(-5, 0, 6);
-	wp2.rotation.y = Math.PI;
+	// wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
+	// wp1.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
 
-	wpWindowback.add(wp1);
-	wpWindowback.add(wp2);
+	// wp1.position.set(-1, 0, 4);
 
-	wpWindowback.position.set(0.1, 0, -7);
+	// var wp2 = new THREE.Group();
+	// wp2.add(createWorkspace({x: 0, y: 0, z: 0}));
+	// wp2.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
 
-	scene.add(wpWindowback);
+	// wp2.position.set(-5, 0, 6);
+	// wp2.rotation.y = Math.PI;
 
-	// 靠走廊、前面的工作区
-	var wp1 = new THREE.Group();
-	wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
-	wp1.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
+	// wpWindowback.add(wp1);
+	// wpWindowback.add(wp2);
 
-	wp1.position.set(4.25, 0, -1.3);
-	wp1.rotation.y = 0.5 * Math.PI;
+	// wpWindowback.position.set(0.1, 0, -7);
 
-	scene.add(wp1);
+	// scene.add(wpWindowback);
 
-	// 靠走廊、后面的工作区
-	var wp1 = new THREE.Group();
-	wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
+	// // 靠走廊、前面的工作区
+	// var wp1 = new THREE.Group();
+	// wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
+	// wp1.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
 
-	wp1.position.set(5.25, 0, -4.1);
+	// wp1.position.set(4.25, 0, -1.3);
+	// wp1.rotation.y = 0.5 * Math.PI;
 
-	scene.add(wp1);
+	// scene.add(wp1);
+
+	// // 靠走廊、后面的工作区
+	// var wp1 = new THREE.Group();
+	// wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
+
+	// wp1.position.set(5.25, 0, -4.1);
+
+	// scene.add(wp1);
 
 
 
