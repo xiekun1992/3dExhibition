@@ -1,4 +1,4 @@
-define('Wall', [], function(){
+define('Wall', ['Door'], function(Door){
 	return function Wall(){
 		this.group = new THREE.Group();
 		this.material = new THREE.MeshLambertMaterial({color: 0xffffff});
@@ -12,7 +12,21 @@ define('Wall', [], function(){
 		this.rightGeometry = new THREE.BoxGeometry(this.width, this.height, 18);
 		this.rightMesh = new THREE.Mesh(this.rightGeometry, this.material);
 		this.rightMesh.position.set(5.3, 0, 0);
+
+		// 挖出门框的位置
+		var rightWallBSP = new ThreeBSP(this.rightMesh);
+		var doorFrameGeometry = new THREE.BoxGeometry(0.14, 1.8, 1);
+		var doorFrameMesh = new THREE.Mesh(doorFrameGeometry, this.material);
+		doorFrameMesh.position.set(5.29, -0.1, 4);
+		var doorFrameBSP = new ThreeBSP(doorFrameMesh);
+
+		var tmp = rightWallBSP.subtract(doorFrameBSP);
+		this.rightMesh = tmp.toMesh();
+		this.rightMesh.material = this.material;
+		this.rightMesh.geometry.computeVertexNormals();
+		this.rightMesh.geometry.computeFaceNormals();
 		this.rightMesh.castShadow = true;
+
 
 		this.topGeometry = new THREE.BoxGeometry(this.width, this.height, 10.5);
 		this.topMesh = new THREE.Mesh(this.topGeometry, this.material);
@@ -48,6 +62,18 @@ define('Wall', [], function(){
 		this.footRight = new THREE.BoxGeometry(footWidth, footHeight, 18);
 		this.footRightMesh = new THREE.Mesh(this.footRight, this.footMaterial);
 		this.footRightMesh.position.set(5.24, -0.9, 0);
+
+		// 挖出门框的位置
+		var footRightBSP = new ThreeBSP(this.footRightMesh);
+		doorFrameMesh.position.set(5.24, -0.1, 4);
+		doorFrameBSP = new ThreeBSP(doorFrameMesh);
+		tmp = footRightBSP.subtract(doorFrameBSP);
+		this.footRightMesh = tmp.toMesh();
+		this.footRightMesh.material = this.footMaterial;
+		this.footRightMesh.geometry.computeVertexNormals();
+		this.footRightMesh.geometry.computeFaceNormals();
+		this.footRightMesh.castShadow = true;
+
 
 		this.footTop = new THREE.BoxGeometry(footWidth, footHeight, 10.5);
 		this.footTopMesh = new THREE.Mesh(this.footTop, this.footMaterial);
