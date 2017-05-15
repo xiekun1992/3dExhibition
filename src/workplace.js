@@ -19,7 +19,7 @@ define('Workplace', [], function(){
 			this.shortMesh2 = new THREE.Mesh(this.geometry1, this.deskMaterial);
 			this.shortMesh2.position.set(-1.93, -0.25, 0.74);
 
-			this.deskGeometry = new THREE.BoxGeometry(0.03, 1.98, 1.98);
+			this.deskGeometry = new THREE.BoxGeometry(0.03, 1.98, 1.98, 10, 10, 10);
 			this.mesh3 = new THREE.Mesh(this.deskGeometry, this.deskMaterial);
 			this.mesh3.rotation.z = 0.5 * Math.PI;
 			this.mesh3.position.set(-0.976, 0, 0);

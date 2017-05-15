@@ -9,7 +9,7 @@ define('Wall', ['Door'], function(Door){
 		this.height = 2;
 		this.width = 0.1;
 
-		this.rightGeometry = new THREE.BoxGeometry(this.width, this.height, 18);
+		this.rightGeometry = new THREE.BoxGeometry(this.width, this.height, 18, 10, 10, 10);
 		this.rightMesh = new THREE.Mesh(this.rightGeometry, this.material);
 		this.rightMesh.position.set(5.3, 0, 0);
 
@@ -26,6 +26,7 @@ define('Wall', ['Door'], function(Door){
 		this.rightMesh.geometry.computeVertexNormals();
 		this.rightMesh.geometry.computeFaceNormals();
 		this.rightMesh.castShadow = true;
+		this.rightMesh.recieveShadow = true;
 
 
 		this.topGeometry = new THREE.BoxGeometry(this.width, this.height, 10.5);
