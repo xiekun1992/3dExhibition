@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>wall</title>
+	<title>window</title>
 	<style>
 		body{
 			margin: 0;
@@ -24,10 +24,10 @@
 			Test: '../example/js/test'
 		}
 	});
-	require(['Test','Wall'], function(Test, Wall){
-		var obj = new Wall();
+	require(['Test','Window'], function(Test, Window){
+		var obj = new Window();
 		obj.group.position.set(0, 0, 0);
-		console.log(obj.group.scale.set(0.5, 0.5, 0.5));
+		// console.log(obj.group.scale.set(0.5, 0.5, 0.5));
 		var tt = new Test();
 		tt.scene.add(obj.group);
 		tt.action = function(){

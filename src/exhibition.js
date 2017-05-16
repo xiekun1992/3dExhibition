@@ -50,7 +50,7 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	scene.add(wall.group);
 	// 门
 	var door = new Door();
-	door.group.position.set(5.29, -0.1, 4);
+	door.group.position.set(5.29, 0.1, 4);
 	scene.add(door.group);
 
 	// 垃圾桶

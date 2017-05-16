@@ -1,6 +1,6 @@
 define('Door', [], function (){
 	function DoorFrame(){
-		this.geometry = new THREE.BoxGeometry(0.14, 1.8, 1);
+		this.geometry = new THREE.BoxGeometry(0.14, 2.2, 1);
 		this.material = new THREE.MeshLambertMaterial({side: THREE.DoubleSide});
 		this.texture = THREE.ImageUtils.loadTexture("../textures/wood-0.jpg");
 		// this.texture.wrapS = THREE.RepeatWrapping;
@@ -13,7 +13,7 @@ define('Door', [], function (){
 		// this.mesh.position.set(5.29, -0.1, 4);
 		var meshBSP = new ThreeBSP(this.mesh);
 
-		var innerDoorGeometry = new THREE.BoxGeometry(0.14, 1.75, 0.86);
+		var innerDoorGeometry = new THREE.BoxGeometry(0.14, 2.15, 0.86);
 		var innerDoorMesh = new THREE.Mesh(innerDoorGeometry, this.material);
 		innerDoorMesh.position.set(0, -0.05, 0);
 		var innerDoorBSP = new ThreeBSP(innerDoorMesh);
@@ -28,7 +28,7 @@ define('Door', [], function (){
 		this.mesh.castShadow = true;
 	}
 	function InnerDoor(){
-		this.geometry = new THREE.BoxGeometry(0.04, 1.75, 0.86);
+		this.geometry = new THREE.BoxGeometry(0.04, 2.15, 0.86);
 		// console.log(this.geometry.faceVertexUvs);
 
 		// var woods = [new THREE.Vector2(0, 0), new THREE.Vector2(0.1, 0), new THREE.Vector2(0.1, 0.1), new THREE.Vector2(0, 0.1)];
