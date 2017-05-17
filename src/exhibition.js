@@ -1,4 +1,5 @@
-define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabinet', 'Bookshelf', 'TrashCan'], function(Ground, Door, Wall, Workplace, Computer, Cabinet, Bookshelf, TrashCan){
+define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabinet', 'Bookshelf', 'TrashCan', 'WaterDispenser'], 
+	function(Ground, Door, Wall, Workplace, Computer, Cabinet, Bookshelf, TrashCan, WaterDispenser){
 	var width = window.innerWidth,
 		height = window.innerHeight;
 
@@ -52,6 +53,12 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	var door = new Door();
 	door.group.position.set(5.29, 0.1, 4);
 	scene.add(door.group);
+	// 饮水机
+	var waterDispenser = new WaterDispenser();
+	waterDispenser.group.scale.set(0.1, 0.1, 0.1);
+	waterDispenser.group.position.set(1, 0.3, 7.1);
+	waterDispenser.group.rotation.y = Math.PI;
+	scene.add(waterDispenser.group);
 
 	// 垃圾桶
 	function createTrashCan(){
@@ -83,7 +90,6 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		computer.computerCase.mesh.rotation.y = 0.76 * Math.PI;
 
 		computer.group.position.set(-0.5, -0.2, 0.5);
-		// computer.group.position.set(position.x - 0.5, -0.2, position.z + 0.5);
 		computer.group.rotation.y = -0.75 * Math.PI;
 		return computer.group;
 	}
@@ -112,15 +118,15 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		workplaceGroup.position.set(position.x, position.y + 0.05, position.z);
 		return workplaceGroup;
 	}
-	// // 靠窗、前面的工作区
-	// var wpWindowfront = new THREE.Group();
-	// var wp1 = new THREE.Group();
+	// 靠窗、前面的工作区
+	var wpWindowfront = new THREE.Group();
+	var wp1 = new THREE.Group();
 	
-	// wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
+	wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
 	// wp1.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
 
-	// wp1.position.set(-1, 0, 3);
-	// wpWindowfront.add(wp1);
+	wp1.position.set(-1, 0, 3);
+	wpWindowfront.add(wp1);
 
 	// var wp2 = new THREE.Group();
 
@@ -132,9 +138,9 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	// wpWindowfront.add(wp2);
 
 
-	// wpWindowfront.position.set(0.1, 0, 0);
+	wpWindowfront.position.set(0.1, 0, 0);
 
-	// scene.add(wpWindowfront);
+	scene.add(wpWindowfront);
 
 
 	// // 靠窗、后面的工作区
