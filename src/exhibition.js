@@ -1,5 +1,5 @@
-define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabinet', 'Bookshelf', 'TrashCan', 'WaterDispenser'], 
-	function(Ground, Door, Wall, Workplace, Computer, Cabinet, Bookshelf, TrashCan, WaterDispenser){
+define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabinet', 'Bookshelf', 'TrashCan', 'WaterDispenser', 'Chair'], 
+	function(Ground, Door, Wall, Workplace, Computer, Cabinet, Bookshelf, TrashCan, WaterDispenser, Chair){
 	var width = window.innerWidth,
 		height = window.innerHeight;
 
@@ -53,13 +53,21 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	var door = new Door();
 	door.group.position.set(5.29, 0.1, 4);
 	scene.add(door.group);
-	// 饮水机
-	var waterDispenser = new WaterDispenser();
-	waterDispenser.group.scale.set(0.1, 0.1, 0.1);
-	waterDispenser.group.position.set(1, 0.3, 7.1);
-	waterDispenser.group.rotation.y = Math.PI;
-	scene.add(waterDispenser.group);
+	// // 饮水机
+	// var waterDispenser = new WaterDispenser();
+	// waterDispenser.group.scale.set(0.1, 0.1, 0.1);
+	// waterDispenser.group.position.set(1, 0.3, 7.1);
+	// waterDispenser.group.rotation.y = Math.PI;
+	// scene.add(waterDispenser.group);
 
+	// 座椅
+	function createChair(){
+		var chair = new Chair();
+		chair.group.scale.set(0.4, 0.4, 0.4);
+		chair.group.position.set(-1, -0.69, 0);
+		chair.group.rotation.y = 0.25 * Math.PI;
+		return chair.group;
+	}
 	// 垃圾桶
 	function createTrashCan(){
 		var trashCan = new TrashCan();
@@ -97,17 +105,19 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	function createWorkspace(position, rotation){
 		var workplaceGroup = new THREE.Group();
 		var workplace = new Workplace();
-		var pc = createPC();
-		var cabinet = createCabinet();
-		var bookshelf = new createBookshelf();
-		var trashCan = new createTrashCan();
-
 		workplace.group.position.set(0, -0.5, 0);
+		// var pc = createPC();
+		// var cabinet = createCabinet();
+		// var bookshelf = new createBookshelf();
+		// var trashCan = new createTrashCan();
+		var chair = new createChair();
 
-		workplaceGroup.add(pc);
-		workplaceGroup.add(cabinet);
-		workplaceGroup.add(bookshelf);
-		workplaceGroup.add(trashCan);
+
+		// workplaceGroup.add(pc);
+		// workplaceGroup.add(cabinet);
+		// workplaceGroup.add(bookshelf);
+		// workplaceGroup.add(trashCan);
+		workplaceGroup.add(chair);
 		workplaceGroup.add(workplace.group);
 		
 		if(rotation){

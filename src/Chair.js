@@ -5,6 +5,9 @@ define('Chair', [], function(){
 		this.wheelGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.16, 40, 1, false, 0, 2 * Math.PI);
 		this.wheelMesh = new THREE.Mesh(this.wheelGeometry, material1);
 		this.wheelMesh.rotation.z = 0.5 * Math.PI;
+
+		this.wheelMesh.recieveShadow = true;
+		this.wheelMesh.castShadow = true;
 	}
 	function Base(){
 		this.group = new THREE.Group();
@@ -19,6 +22,13 @@ define('Chair', [], function(){
 		this.zGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.6, 30, 1, false, 0, 2 * Math.PI);
 		this.zMesh = new THREE.Mesh(this.zGeometry, material1);
 		this.zMesh.position.set(0, 0.23, 0);
+
+		this.xMesh.recieveShadow = true;
+		this.xMesh.castShadow = true;
+		this.yMesh.recieveShadow = true;
+		this.yMesh.castShadow = true;
+		this.zMesh.recieveShadow = true;
+		this.zMesh.castShadow = true;
 
 		var wheel1 = new Wheel();
 		var wheel2 = new Wheel();
@@ -63,6 +73,9 @@ define('Chair', [], function(){
 		this.mesh.material = material1;
 		this.mesh.geometry.computeFaceNormals();
 		this.mesh.geometry.computeVertexNormals();
+
+		this.mesh.recieveShadow = true;
+		this.mesh.castShadow = true;
 	}
 	function Chair(){
 		this.group = new THREE.Group();
@@ -80,6 +93,8 @@ define('Chair', [], function(){
 		this.mesh.material = material2;
 		this.mesh.geometry.computeFaceNormals();
 		this.mesh.geometry.computeVertexNormals();	
+		this.mesh.recieveShadow = true;
+		this.mesh.castShadow = true;
 
 		this.group.add(this.mesh);
 
