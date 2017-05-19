@@ -5,7 +5,7 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 
 	var scene = new THREE.Scene();
 	var camera = new THREE.PerspectiveCamera(45, width / height, 0.1 ,1000);
-	camera.position.set(0, 0, 10);
+	camera.position.set(-10, 0, 0);
 	camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 	var renderer = new THREE.WebGLRenderer({antiAlias: true});
@@ -27,15 +27,15 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	// camControls.lat = 10;
 	var camControls = new THREE.TrackballControls(camera);
 	camControls.rotateSpeed = 1;
-	camControls.zoomSpeed = 1;
+	camControls.zoomSpeed = 2;
 	camControls.panSpeed = 1;
-	camControls.staticMoving = true;
+	// camControls.staticMoving = true;
 
 	var amLight = new THREE.AmbientLight(0x888888);
 	scene.add(amLight);
 
-	var spotLight = new THREE.SpotLight(0xdddddd, 1);
-	spotLight.position.set(0, 15, 0);
+	var spotLight = new THREE.SpotLight(0xfbdf75, 1);
+	spotLight.position.set(-10, 5, 0);
 	spotLight.castShadow = true;
 	scene.add(spotLight);
 
@@ -46,20 +46,67 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	ground.mesh.rotation.z = -0.5 * Math.PI;
 	ground.mesh.receieveShadow = true;
 	scene.add(ground.mesh);
+	function loadModel(name, cb){
+		var loader = new THREE.ObjectLoader();
+		loader.load('../models/' + name + '.json', 
+		function(obj){
+			obj.receieveShadow = true;
+			obj.castShadow = true;
+			cb && cb(obj);
+			scene.add(obj);
+		}, function ( xhr ) {
+	        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+	    }, function ( xhr ) {
+	        console.error( 'An error happened' );
+	    });
+	}
 	// 墙
-	var wall = new Wall();
-	scene.add(wall.group);
+	function createWall(){
+		loadModel('wall/wall', function(obj){
+			obj.position.set(-5.4, 0.5, 0);
+		});
+		loadModel('wall/kick_line', function(obj){
+			obj.position.set(-4.25, -0.9, -5);
+		});
+		loadModel('wall/slate', function(obj){
+			obj.position.set(-5.4, -0.64, 4.2);
+		});
+	}
+	createWall();
+	function createWindow(x, y, z){
+		loadModel('window/frame', function(obj){
+			obj.scale.set(0.8, 0.6, 0.8);
+			obj.rotation.y = 0.5 * Math.PI;
+			obj.position.set(x, y, z);
+		});
+		loadModel('window/glass', function(obj){
+			obj.scale.set(0.8, 0.6, 0.8);
+			obj.rotation.y = 0.5 * Math.PI;
+			obj.position.set(x, y, z);
+			obj.castShadow = false;
+		});
+	}
+	createWindow(-5.4, 1.37, 0);
+	createWindow(-5.4, 1.37, 4.2);
+	createWindow(-5.4, 1.37, -4.2);
 	// 门
 	var door = new Door();
-	door.group.position.set(5.29, 0.1, 4);
+	door.group.position.set(5.34, 0.1, 4);
 	scene.add(door.group);
-	// // 饮水机
-	// var waterDispenser = new WaterDispenser();
-	// waterDispenser.group.scale.set(0.1, 0.1, 0.1);
-	// waterDispenser.group.position.set(1, 0.3, 7.1);
-	// waterDispenser.group.rotation.y = Math.PI;
-	// scene.add(waterDispenser.group);
-
+	// 饮水机
+	function createWaterDispenser(){
+		loadModel('water_dispenser/waterDispenser', function(obj){
+			obj.scale.set(0.1, 0.1, 0.1);
+			obj.position.set(1, -0.5, 7.1);
+			obj.rotation.y = Math.PI;
+		});
+		loadModel('water_dispenser/bucket', function(obj){
+			obj.scale.set(0.1, 0.1, 0.1);
+			obj.position.set(1, 0.22, 7.1);
+			obj.rotation.y = Math.PI;
+		});
+	}
+	createWaterDispenser();
 	// 座椅
 	function createChair(){
 		var chair = new Chair();
@@ -110,14 +157,14 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		// var cabinet = createCabinet();
 		// var bookshelf = new createBookshelf();
 		// var trashCan = new createTrashCan();
-		var chair = new createChair();
+		// var chair = new createChair();
 
 
 		// workplaceGroup.add(pc);
 		// workplaceGroup.add(cabinet);
 		// workplaceGroup.add(bookshelf);
 		// workplaceGroup.add(trashCan);
-		workplaceGroup.add(chair);
+		// workplaceGroup.add(chair);
 		workplaceGroup.add(workplace.group);
 		
 		if(rotation){
@@ -129,14 +176,14 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		return workplaceGroup;
 	}
 	// 靠窗、前面的工作区
-	var wpWindowfront = new THREE.Group();
-	var wp1 = new THREE.Group();
+	// var wpWindowfront = new THREE.Group();
+	// var wp1 = new THREE.Group();
 	
-	wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
+	// wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
 	// wp1.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
 
-	wp1.position.set(-1, 0, 3);
-	wpWindowfront.add(wp1);
+	// wp1.position.set(-1, 0, 3);
+	// wpWindowfront.add(wp1);
 
 	// var wp2 = new THREE.Group();
 
@@ -148,9 +195,9 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	// wpWindowfront.add(wp2);
 
 
-	wpWindowfront.position.set(0.1, 0, 0);
+	// wpWindowfront.position.set(0.1, 0, 0);
 
-	scene.add(wpWindowfront);
+	// scene.add(wpWindowfront);
 
 
 	// // 靠窗、后面的工作区

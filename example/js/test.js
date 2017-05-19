@@ -13,6 +13,7 @@ define('Test', [], function(){
 		renderer.setSize(width, height);
 		renderer.setClearColor(0xffffff);
 		renderer.shadowMapEnabled = true;
+		renderer.shadowMapType=THREE.PCFSoftShadowMap;
 
 		var clock = new THREE.Clock();
 		// var camControls = new THREE.FirstPersonControls(camera);

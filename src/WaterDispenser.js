@@ -68,8 +68,8 @@ define('WaterDispenser', [], function(){
 
 		var bucket = new Bucket();
 
+		console.log(JSON.stringify(this.bodyMesh.toJSON()));
 		this.group.add(bucket.mesh);
-		this.group.add(this.topMesh);
 		this.group.add(this.bodyMesh);
 	}
 
