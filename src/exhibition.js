@@ -195,9 +195,8 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 			Promise.resolve(promise).then(function(models){
 				var loader = new THREE.ObjectLoader();
 				var meshs = JSON.parse(models);
-				meshs.forEach(function(o, i){
-					meshs[i] = loader.parse(o);
-				});
+				meshs[0] = loader.parse(meshs[0]);
+				meshs[1] = loader.parse(meshs[1]);
 				
 				var group = new THREE.Group();
 				meshs[0].position.x = -1;
