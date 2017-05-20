@@ -63,8 +63,6 @@ define('Window', [], function(){
 
 		this.group.add(this.frameMesh);
 		this.group.add(this.glassMesh);
-
-		console.log(JSON.stringify(this.glassMesh.toJSON()));
 	}
 	function Glass(long, height, width){
 		this.geometry = new THREE.BoxGeometry(long, height, width);

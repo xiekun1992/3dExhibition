@@ -27,7 +27,7 @@ define('Workplace', [], function(){
 			this.deskBSP = new ThreeBSP(this.mesh3);
 
 			// 通过二元运算作出凹陷的桌面
-			this.sphere = new THREE.SphereGeometry(0.6, 32, 32);
+			this.sphere = new THREE.SphereGeometry(0.6, 50, 50);
 			this.sphereMesh = new THREE.Mesh(this.sphere, this.deskMaterial);
 			this.sphereMesh.position.set(-1.176, 0, -0.176);
 			this.sphereBSP = new ThreeBSP(this.sphereMesh);
@@ -54,7 +54,7 @@ define('Workplace', [], function(){
 			resultMesh.geometry.computeFaceNormals();
 			resultMesh.geometry.computeVertexNormals();
 
-			// resultMesh.castShadow = true;
+			resultMesh.castShadow = true;
 			resultMesh.receiveShadow = true;
 			
 			var mesh1BSP = new ThreeBSP(this.mesh1);
@@ -66,9 +66,13 @@ define('Workplace', [], function(){
 			wallMesh.geometry.computeVertexNormals();
 
 			wallMesh.castShadow = true;
-			// wallMesh.receiveShadow = true;
+			wallMesh.receiveShadow = true;
 
 			this.group.add(wallMesh);
 			this.group.add(resultMesh);
+
+
+
+		console.log(JSON.stringify(wallMesh.toJSON()));
 	};
 });
