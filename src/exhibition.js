@@ -162,25 +162,32 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		return bookshelf.group;
 	}
 	// 工作柜
-	function createCabinet(){
-		return Promise.all([loadModel('cabinet/cabinet'), loadModel('cabinet/wheels')])
+	function createAndCacheCabinet(){
+		var promise = Promise.all([loadModel('cabinet/cabinet'), loadModel('cabinet/wheels')])
 		.then(function(meshs){
-			var cabinet = meshs[0], wheels = meshs[1];
-			cabinet.scale.set(0.2, 0.2, 0.25);
-			cabinet.position.set(-0.3, -0.525, -0.74);
-			cabinet.rotation.y = -0.5 * Math.PI;
-			
-			wheels.scale.set(0.2, 0.2, 0.25);
-			wheels.position.set(-0.5, -0.93, -0.9);
-			wheels.rotation.y = -0.5 * Math.PI;
-			wheels.rotation.z = -0.5 * Math.PI;
-
-			var group = new THREE.Group();
-			group.add(cabinet);
-			group.add(wheels);
-			return group;
+			return [JSON.stringify(meshs[0].toJSON()), JSON.stringify(meshs[1].toJSON())];
 		});
+		return function(){
+			return Promise.resolve(promise).then(function(meshs){
+				var loader = new THREE.ObjectLoader();
+				var cabinet = loader.parse(JSON.parse(meshs[0])), wheels = loader.parse(JSON.parse(meshs[1]));
+				cabinet.scale.set(0.2, 0.2, 0.25);
+				cabinet.position.set(-0.3, -0.525, -0.74);
+				cabinet.rotation.y = -0.5 * Math.PI;
+				
+				wheels.scale.set(0.2, 0.2, 0.25);
+				wheels.position.set(-0.5, -0.93, -0.9);
+				wheels.rotation.y = -0.5 * Math.PI;
+				wheels.rotation.z = -0.5 * Math.PI;
+
+				var group = new THREE.Group();
+				group.add(cabinet);
+				group.add(wheels);
+				return group;
+			});
+		};
 	}
+	var createCabinet = createAndCacheCabinet();
 	// 工位电脑
 	function createPC(){
 		var computer = new Computer(0.1);
