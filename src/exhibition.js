@@ -37,7 +37,7 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 
 	var spotLight = new THREE.SpotLight(0xdddddd, 1);
 	// var spotLight = new THREE.SpotLight(0xfbdf75, 1);
-	spotLight.position.set(0, 10, 0);
+	spotLight.position.set(0, 20, 0);
 	spotLight.castShadow = true;
 	scene.add(spotLight);
 
@@ -59,6 +59,23 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 
 	/************************** 添加模型 ***************************/
 
+	function loadModel(name, cb){
+		var promise = new Promise(function(resolve, reject){
+			var loader = new THREE.ObjectLoader();
+			loader.load('../models/' + name + '.json', 
+			function(obj){
+				obj.receieveShadow = true;
+				obj.castShadow = true;
+				resolve(obj);
+			}, function ( xhr ) {
+		        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+		    }, function ( xhr ) {
+		        console.error( 'An error happened' );
+		        reject(null);
+		    });
+		});
+		return promise;
+	}
 
 	// 地板
 	var ground = new Ground();
@@ -66,44 +83,35 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	ground.mesh.rotation.z = -0.5 * Math.PI;
 	ground.mesh.receieveShadow = true;
 	scene.add(ground.mesh);
-	function loadModel(name, cb){
-		var loader = new THREE.ObjectLoader();
-		loader.load('../models/' + name + '.json', 
-		function(obj){
-			obj.receieveShadow = true;
-			obj.castShadow = true;
-			cb && cb(obj);
-			scene.add(obj);
-		}, function ( xhr ) {
-	        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-	    }, function ( xhr ) {
-	        console.error( 'An error happened' );
-	    });
-	}
 	// 墙
 	function createWall(){
-		loadModel('wall/wall', function(obj){
+		loadModel('wall/wall').then(function(obj){
 			obj.position.set(-5.4, 0.5, 0);
+			scene.add(obj);
 		});
-		loadModel('wall/kick_line', function(obj){
+		loadModel('wall/kick_line').then(function(obj){
 			obj.position.set(-4.25, -0.9, -5);
+			scene.add(obj);
 		});
-		loadModel('wall/slate', function(obj){
+		loadModel('wall/slate').then(function(obj){
 			obj.position.set(-5.4, -0.64, 4.2);
+			scene.add(obj);
 		});
 	}
 	createWall();
 	function createWindow(x, y, z){
-		loadModel('window/frame', function(obj){
+		loadModel('window/frame').then(function(obj){
 			obj.scale.set(0.8, 0.6, 0.8);
 			obj.rotation.y = 0.5 * Math.PI;
 			obj.position.set(x, y, z);
+			scene.add(obj);
 		});
-		loadModel('window/glass', function(obj){
+		loadModel('window/glass').then(function(obj){
 			obj.scale.set(0.8, 0.6, 0.8);
 			obj.rotation.y = 0.5 * Math.PI;
 			obj.position.set(x, y, z);
 			obj.castShadow = false;
+			scene.add(obj);
 		});
 	}
 	createWindow(-5.4, 1.37, 0);
@@ -115,16 +123,18 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	scene.add(door.group);
 	// 饮水机
 	function createWaterDispenser(){
-		loadModel('water_dispenser/waterDispenser', function(obj){
+		loadModel('water_dispenser/waterDispenser').then(function(obj){
 			obj.scale.set(0.1, 0.1, 0.1);
 			obj.position.set(1, -0.5, 7.1);
 			obj.rotation.y = Math.PI;
+			scene.add(obj);
 		});
-		loadModel('water_dispenser/bucket', function(obj){
+		loadModel('water_dispenser/bucket').then(function(obj){
 			obj.scale.set(0.1, 0.1, 0.1);
 			obj.position.set(1, 0.22, 7.1);
 			obj.rotation.y = Math.PI;
 			obj.castShadow = false;
+			scene.add(obj);
 		});
 	}
 	createWaterDispenser();
@@ -169,109 +179,54 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		computer.group.rotation.y = -0.75 * Math.PI;
 		return computer.group;
 	}
+
 	// 工作区
-	// function createWorkspace(position, rotation){
-		// var workplaceGroup = new THREE.Group();
-		// var workplace = new Workplace();
-		// workplace.group.position.set(0, -0.5, 0);
-		// var pc = createPC();
-		// var cabinet = createCabinet();
-		// var bookshelf = new createBookshelf();
-		// var trashCan = new createTrashCan();
-		// var chair = new createChair();
-
-
-		// workplaceGroup.add(pc);
-		// workplaceGroup.add(cabinet);
-		// workplaceGroup.add(bookshelf);
-		// workplaceGroup.add(trashCan);
-		// workplaceGroup.add(chair);
-		// workplaceGroup.add(workplace.group);
-		
-		// if(rotation){
-		// 	workplaceGroup.rotation.x = rotation.x || 0;
-		// 	workplaceGroup.rotation.y = rotation.y || 0;
-		// 	workplaceGroup.rotation.z = rotation.z || 0;
-		// }
-		// workplaceGroup.position.set(position.x, position.y + 0.05, position.z);
-		// return workplaceGroup;
-	// }
-	function createWorkspace(position, rotationY){
-		loadModel('workplace/desk', function(obj){
-			obj.position.set(-1 + position.x, -0.5 + position.y, position.z);
-			obj.rotation.z = 0.5 * Math.PI;
-			obj.rotation.y = (-rotationY || 0) * Math.PI;
-		});
-		loadModel('workplace/wall', function(obj){
-			obj.position.set(position.x, -0.5 + position.y, position.z);
-			obj.rotation.y = (rotationY || 0) * Math.PI;
-		});
+	function createAndCacheWorkspace(){
+		function setModels(group, position, rotationY){
+			group.position.set(position.x, -0.5 + position.y, position.z);
+			group.rotation.y = (-rotationY || 0) * Math.PI;
+			scene.add(group);
+		}
+		var promise = Promise.all([loadModel('workplace/desk'), loadModel('workplace/wall')])
+							.then(function(meshs){
+								return JSON.stringify([meshs[0].toJSON(), meshs[1].toJSON()]);
+							});
+		return function(position, rotationY){
+			Promise.resolve(promise).then(function(models){
+				var loader = new THREE.ObjectLoader();
+				var meshs = JSON.parse(models);
+				meshs.forEach(function(o, i){
+					meshs[i] = loader.parse(o);
+				});
+				
+				var group = new THREE.Group();
+				meshs[0].position.x = -1;
+				meshs[0].rotation.z = 0.5 * Math.PI;
+				group.add(meshs[0], meshs[1]);
+				setModels(group, position, rotationY);
+			});
+		};
 	}
+	var createWorkspace = createAndCacheWorkspace();
 	// 靠窗、前面的工作区
 	createWorkspace({x: -1, y: 0, z: 3});
-	// createWorkspace({x: -3, y: 0, z: 3}, -0.5);
-	// var wpWindowfront = new THREE.Group();
-	// var wp1 = new THREE.Group();
-	
-	// wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
-	// wp1.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
+	createWorkspace({x: -4, y: 0, z: 4}, 0.5);
 
-	// wp1.position.set(-1, 0, 3);
-	// wpWindowfront.add(wp1);
+	createWorkspace({x: -2, y: 0, z: 4}, -0.5);
+	createWorkspace({x: -5, y: 0, z: 5}, -1);
 
-	// var wp2 = new THREE.Group();
+	// 靠窗、后面的工作区
+	var distance = -6;
+	createWorkspace({x: -1, y: 0, z: 3 + distance});
+	createWorkspace({x: -4, y: 0, z: 4 + distance}, 0.5);
 
-	// wp2.add(createWorkspace({x: 0, y: 0, z: 0}));
-	// wp2.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
+	createWorkspace({x: -2, y: 0, z: 4 + distance}, -0.5);
+	createWorkspace({x: -5, y: 0, z: 5 + distance}, -1);
 
-	// wp2.position.set(-5, 0, 5);
-	// wp2.rotation.y = Math.PI;
-	// wpWindowfront.add(wp2);
+	// 靠走廊、前面的工作区
+	createWorkspace({x: 5.2, y: 0, z: 1.5});
+	createWorkspace({x: 4.2, y: 0, z: -1.5}, -0.5);	
 
-
-	// wpWindowfront.position.set(0.1, 0, 0);
-
-	// scene.add(wpWindowfront);
-
-
-	// // 靠窗、后面的工作区
-	// var wpWindowback = new THREE.Group();
-	// var wp1 = new THREE.Group();
-
-	// wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
-	// wp1.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
-
-	// wp1.position.set(-1, 0, 4);
-
-	// var wp2 = new THREE.Group();
-	// wp2.add(createWorkspace({x: 0, y: 0, z: 0}));
-	// wp2.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
-
-	// wp2.position.set(-5, 0, 6);
-	// wp2.rotation.y = Math.PI;
-
-	// wpWindowback.add(wp1);
-	// wpWindowback.add(wp2);
-
-	// wpWindowback.position.set(0.1, 0, -7);
-
-	// scene.add(wpWindowback);
-
-	// // 靠走廊、前面的工作区
-	// var wp1 = new THREE.Group();
-	// wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
-	// wp1.add(createWorkspace({x: -3, y: 0, z: 1}, {y: -0.5 * Math.PI}));
-
-	// wp1.position.set(4.25, 0, -1.3);
-	// wp1.rotation.y = 0.5 * Math.PI;
-
-	// scene.add(wp1);
-
-	// // 靠走廊、后面的工作区
-	// var wp1 = new THREE.Group();
-	// wp1.add(createWorkspace({x: 0, y: 0, z: 0}));
-
-	// wp1.position.set(5.25, 0, -4.1);
-
-	// scene.add(wp1);
+	// 靠走廊、后面的工作区
+	createWorkspace({x: 5.2, y: 0, z: -4.1});
 });
