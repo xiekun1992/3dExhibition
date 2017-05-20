@@ -68,7 +68,7 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 				obj.castShadow = true;
 				resolve(obj);
 			}, function ( xhr ) {
-		        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+		        // console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
 		    }, function ( xhr ) {
 		        console.error( 'An error happened' );
 		        reject(null);
@@ -163,11 +163,23 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	}
 	// 工作柜
 	function createCabinet(){
-		var cabinet = new Cabinet();
-		cabinet.group.scale.set(0.2, 0.2, 0.25);
-		cabinet.group.position.set(-0.31, -0.58, -0.7);
-		cabinet.group.rotation.y = -0.5 * Math.PI;
-		return cabinet.group;
+		return Promise.all([loadModel('cabinet/cabinet'), loadModel('cabinet/wheels')])
+		.then(function(meshs){
+			var cabinet = meshs[0], wheels = meshs[1];
+			cabinet.scale.set(0.2, 0.2, 0.25);
+			cabinet.position.set(-0.3, -0.525, -0.74);
+			cabinet.rotation.y = -0.5 * Math.PI;
+			
+			wheels.scale.set(0.2, 0.2, 0.25);
+			wheels.position.set(-0.5, -0.93, -0.9);
+			wheels.rotation.y = -0.5 * Math.PI;
+			wheels.rotation.z = -0.5 * Math.PI;
+
+			var group = new THREE.Group();
+			group.add(cabinet);
+			group.add(wheels);
+			return group;
+		});
 	}
 	// 工位电脑
 	function createPC(){
@@ -183,9 +195,16 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	// 工作区
 	function createAndCacheWorkspace(){
 		function setModels(group, position, rotationY){
-			group.position.set(position.x, -0.5 + position.y, position.z);
+			group.position.set(position.x, -0.45 + position.y, position.z);
 			group.rotation.y = (-rotationY || 0) * Math.PI;
 			scene.add(group);
+			
+			var cabinetPromise = createCabinet();
+			cabinetPromise.then(function(group){
+				group.position.set(position.x, position.y, position.z);
+				group.rotation.y = (-rotationY || 0) * Math.PI;
+				scene.add(group);
+			});
 		}
 		var promise = Promise.all([loadModel('workplace/desk'), loadModel('workplace/wall')])
 							.then(function(meshs){
@@ -199,7 +218,8 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 				meshs[1] = loader.parse(meshs[1]);
 				
 				var group = new THREE.Group();
-				meshs[0].position.x = -1;
+				meshs[0].position.x = -0.985;
+				meshs[0].position.z = -0.008;
 				meshs[0].rotation.z = 0.5 * Math.PI;
 				group.add(meshs[0], meshs[1]);
 				setModels(group, position, rotationY);

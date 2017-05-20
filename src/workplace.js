@@ -70,9 +70,5 @@ define('Workplace', [], function(){
 
 			this.group.add(wallMesh);
 			this.group.add(resultMesh);
-
-
-
-		console.log(JSON.stringify(wallMesh.toJSON()));
 	};
 });
