@@ -14,10 +14,10 @@ define('Cabinet', [], function(){
 	function Cabinet(){
 		this.group = new THREE.Group();
 
-		this.topGeometry = new THREE.BoxGeometry(2, 0.1, 2, 30, 30, 30);
+		this.topGeometry = new THREE.BoxGeometry(2, 0.1, 2);
 		this.topMesh = new THREE.Mesh(this.topGeometry, material);
 
-		this.bodyGeometry = new THREE.BoxGeometry(1.9, 1.9, 1.9, 30, 30, 30);
+		this.bodyGeometry = new THREE.BoxGeometry(1.9, 1.9, 1.9);
 		this.bodyMesh = new THREE.Mesh(this.bodyGeometry, material);
 		this.bodyMesh.position.set(0, -1 ,0);
 
@@ -78,9 +78,6 @@ define('Cabinet', [], function(){
 
 		this.group.add(mesh);
 		this.group.add(wheelMesh);
-
-
-		console.log(JSON.stringify(wheelMesh.toJSON()));
 	}
 	return Cabinet;
 });

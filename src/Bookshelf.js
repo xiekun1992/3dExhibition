@@ -46,10 +46,11 @@ define('Bookshelf', [], function(){
 		this.bottomMesh.castShadow = true;
 		this.bottomMesh.recieveShadow = true;
 
-		this.group.add(this.frontMesh);
-		this.group.add(this.backMesh);
-		this.group.add(this.bottomMesh);
-
+		// 合并底盘
+		var frontMeshBSP = new ThreeBSP(this.frontMesh);
+		var backMeshBSP = new ThreeBSP(this.backMesh);
+		var bottomMeshBSP = new ThreeBSP(this.bottomMesh);
+		var baseBSP = frontMeshBSP.union(backMeshBSP).union(bottomMeshBSP);
 		
 		this.side1 = new Side();
 		this.side2 = new Side();
@@ -60,13 +61,23 @@ define('Bookshelf', [], function(){
 		this.side3.mesh.position.set(0.333 - thick / 2, 0.5, -0.5);
 		this.side4.mesh.position.set(1 - thick / 2, 0.5, -0.5);
 
-		this.group.add(this.side1.mesh);
-		this.group.add(this.side2.mesh);
-		this.group.add(this.side3.mesh);
-		this.group.add(this.side4.mesh);
+		// 合并隔板
+		var side1BSP = new ThreeBSP(this.side1.mesh);
+		var side2BSP = new ThreeBSP(this.side2.mesh);
+		var side3BSP = new ThreeBSP(this.side3.mesh);
+		var side4BSP = new ThreeBSP(this.side4.mesh);
+		var sideBSP = side1BSP.union(side2BSP).union(side3BSP).union(side4BSP);
+
+		// 组合书架
+		var mesh = baseBSP.union(sideBSP).toMesh();
+		mesh.material = material;
+		mesh.geometry.computeFaceNormals();
+		mesh.geometry.computeVertexNormals();
 
 		this.group.recieveShadow = true;
 		this.group.castShadow = true;
+
+		this.group.add(mesh);
 	}
 	return Bookshelf;
 });
