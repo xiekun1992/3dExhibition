@@ -82,20 +82,14 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		return promise;
 	}
 	function generateCacheModelLoader(handler, ...promises){
-		var promise = Promise.all(promises)
-		.then(function(meshs){
-			return meshs.map(function(o){
-				return JSON.stringify(o.toJSON());
-			});
-		});
+		var promise = Promise.all(promises);
 		return function(...args){
-			return Promise.resolve(promise).then(function(meshStr){
-				var loader = new THREE.ObjectLoader();
-				var meshs = [];
-				meshStr.map(function(o, i){
-					return (meshs[i] = loader.parse(JSON.parse(o)));
+			return Promise.resolve(promise).then(function(meshs){
+				var meshsCopy = [];
+				meshs.forEach(function(o, i){
+					meshsCopy[i] = o.clone();
 				});
-				return Promise.resolve(handler.apply(null, [meshs, ...args]));
+				return Promise.resolve(handler.apply(null, [meshsCopy, ...args]));
 			});
 		};
 	}
