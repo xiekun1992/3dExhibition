@@ -23,40 +23,41 @@ define('Chair', [], function(){
 		this.zMesh = new THREE.Mesh(this.zGeometry, material1);
 		this.zMesh.position.set(0, 0.23, 0);
 
-		this.xMesh.recieveShadow = true;
-		this.xMesh.castShadow = true;
-		this.yMesh.recieveShadow = true;
-		this.yMesh.castShadow = true;
-		this.zMesh.recieveShadow = true;
-		this.zMesh.castShadow = true;
+		// 合并支架
+		var xMeshBSP = new ThreeBSP(this.xMesh);
+		var yMeshBSP = new ThreeBSP(this.yMesh);
+		var zMeshBSP = new ThreeBSP(this.zMesh);
+		var meshBSP = xMeshBSP.union(yMeshBSP).union(zMeshBSP);
+
 
 		var wheel1 = new Wheel();
 		var wheel2 = new Wheel();
 		var wheel3 = new Wheel();
 		var wheel4 = new Wheel();
-		var wheels = new THREE.Group();
 
-		wheel1.wheelMesh.position.set(0, 0, 0.7);
-		wheel2.wheelMesh.position.set(0, 0, -0.7);
-		wheel3.wheelMesh.position.set(-0.7, 0, 0);
-		wheel4.wheelMesh.position.set(0.7, 0, 0);
+		wheel1.wheelMesh.position.set(0, -0.15, 0.7);
+		wheel2.wheelMesh.position.set(0, -0.15, -0.7);
+		wheel3.wheelMesh.position.set(-0.7, -0.15, 0);
+		wheel4.wheelMesh.position.set(0.7, -0.15, 0);
 
 		wheel3.wheelMesh.rotation.y = 0.5 * Math.PI;
 		wheel4.wheelMesh.rotation.y = 0.5 * Math.PI;
 
-		wheels.add(wheel1.wheelMesh);
-		wheels.add(wheel2.wheelMesh);
-		wheels.add(wheel3.wheelMesh);
-		wheels.add(wheel4.wheelMesh);
+		// 合并滚轮
+		var wheel1BSP = new ThreeBSP(wheel1.wheelMesh);
+		var wheel2BSP = new ThreeBSP(wheel2.wheelMesh);
+		var wheel3BSP = new ThreeBSP(wheel3.wheelMesh);
+		var wheel4BSP = new ThreeBSP(wheel4.wheelMesh);
+		var wheelsBSP = wheel1BSP.union(wheel2BSP).union(wheel3BSP).union(wheel4BSP);
 
-		wheels.position.set(0, -0.15, 0);
+		this.mesh = wheelsBSP.union(meshBSP).toMesh();
+		this.mesh.material = material1;
+		this.mesh.geometry.computeFaceNormals();
+		this.mesh.geometry.computeVertexNormals();	
+		this.mesh.position.set(0, -0.75, 0.7);
 
-		this.group.add(this.xMesh);
-		this.group.add(this.yMesh);
-		this.group.add(this.zMesh);
-		this.group.add(wheels);
-
-		this.group.position.set(0, -0.53, 0);
+		this.mesh.recieveShadow = true;
+		this.mesh.castShadow = true;
 	}
 	function Handrail(){
 		this.frontGeometry = new THREE.BoxGeometry(0.14, 0.1, 0.56);
@@ -105,10 +106,18 @@ define('Chair', [], function(){
 		handrailLeft.mesh.position.set(-0.77, 0.26, 0.3);
 		handrailRight.mesh.position.set(0.77, 0.26, 0.3);
 
-		this.group.add(handrailLeft.mesh);
-		this.group.add(handrailRight.mesh);
+		// 合并扶手和基座
+		var baseBSP = new ThreeBSP(base.mesh);
+		var handrailLeftBSP = new ThreeBSP(handrailLeft.mesh);
+		var handrailRightBSP = new ThreeBSP(handrailRight.mesh);
+		baseMesh = baseBSP.union(handrailLeftBSP).union(handrailRightBSP).toMesh();
+		baseMesh.material = material1;
+		baseMesh.geometry.computeVertexNormals();
+		baseMesh.geometry.computeFaceNormals();
+		baseMesh.recieveShadow = true;
+		baseMesh.castShadow = true;
 
-		this.group.add(base.group);
+		this.group.add(baseMesh);
 	}
 
 	return Chair;

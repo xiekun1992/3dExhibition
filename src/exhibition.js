@@ -160,13 +160,26 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	}
 	createWaterDispenser();
 	// 座椅
-	function createChair(){
-		var chair = new Chair();
-		chair.group.scale.set(0.4, 0.4, 0.4);
-		chair.group.position.set(-1, -0.69, 0);
-		chair.group.rotation.y = 0.25 * Math.PI;
-		return chair.group;
-	}
+	var createChair = generateCacheModelLoader(function(meshs){
+		var chair = meshs[0], base = meshs[1];
+		chair.scale.set(0.4, 0.4, 0.4);
+		chair.position.set(-1, -0.31, -0.56);
+		chair.rotation.x = -0.56 * Math.PI;
+
+		base.scale.set(0.4, 0.4, 0.4);
+		base.position.set(-1, -0.92, 0);
+		base.rotation.z = 0.5 * Math.PI;
+
+		var groupTmp = new THREE.Group();
+		groupTmp.add(chair);
+		groupTmp.add(base);
+		groupTmp.rotation.y = 0.25 * Math.PI;
+		groupTmp.position.set(-0.2, 0, -0.6);
+
+		var group = new THREE.Group();
+		group.add(groupTmp);
+		return group;
+	}, loadModel('chair/chair'), loadModel('chair/base'));
 	// 垃圾桶
 	var createTrashCan = generateCacheModelLoader(function(meshs){
 		var trashCan = meshs.shift();
@@ -237,27 +250,29 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 			createBookshelf().then(setModels);
 			// 添加垃圾桶
 			createTrashCan().then(setModels);
+			// 添加座椅
+			createChair().then(setModels);
 		}
 	}, loadModel('workplace/desk'), loadModel('workplace/wall'));
 	// 靠窗、前面的工作区
 	createWorkspace({x: -1, y: 0, z: 3});
 	createWorkspace({x: -4, y: 0, z: 4}, 0.5);
 
-	// createWorkspace({x: -2, y: 0, z: 4}, -0.5);
-	// createWorkspace({x: -5, y: 0, z: 5}, -1);
+	createWorkspace({x: -2, y: 0, z: 4}, -0.5);
+	createWorkspace({x: -5, y: 0, z: 5}, -1);
 
-	// // 靠窗、后面的工作区
-	// var distance = -6;
-	// createWorkspace({x: -1, y: 0, z: 3 + distance});
-	// createWorkspace({x: -4, y: 0, z: 4 + distance}, 0.5);
+	// 靠窗、后面的工作区
+	var distance = -6;
+	createWorkspace({x: -1, y: 0, z: 3 + distance});
+	createWorkspace({x: -4, y: 0, z: 4 + distance}, 0.5);
 
-	// createWorkspace({x: -2, y: 0, z: 4 + distance}, -0.5);
-	// createWorkspace({x: -5, y: 0, z: 5 + distance}, -1);
+	createWorkspace({x: -2, y: 0, z: 4 + distance}, -0.5);
+	createWorkspace({x: -5, y: 0, z: 5 + distance}, -1);
 
-	// // 靠走廊、前面的工作区
-	// createWorkspace({x: 5.2, y: 0, z: 1.5});
-	// createWorkspace({x: 4.2, y: 0, z: -1.5}, -0.5);	
+	// 靠走廊、前面的工作区
+	createWorkspace({x: 5.2, y: 0, z: 1.5});
+	createWorkspace({x: 4.2, y: 0, z: -1.5}, -0.5);	
 
-	// // 靠走廊、后面的工作区
-	// createWorkspace({x: 5.2, y: 0, z: -4.1});
+	// 靠走廊、后面的工作区
+	createWorkspace({x: 5.2, y: 0, z: -4.1});
 });
