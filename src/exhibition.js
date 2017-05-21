@@ -211,16 +211,37 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		return group;
 	}, loadModel('cabinet/cabinet'), loadModel('cabinet/wheels'));
 	// 工位电脑
-	function createPC(){
-		var computer = new Computer(0.1);
-		computer.computerCase.mesh.position.set(-0.5, -0.6, 0.3);
-		computer.computerCase.mesh.rotation.y = 0.76 * Math.PI;
+	var createPC = generateCacheModelLoader(function(meshs){
+		meshs.forEach(function(o){
+			o.scale.set(0.1, 0.1, 0.1);
+		});
+		var monitor = meshs[0], keyboard = meshs[1], computerCase = meshs[2], mouse = meshs[3], wheel = meshs[4];
+		var group = new THREE.Group(), groupTmp = new THREE.Group();
 
-		computer.group.position.set(-0.5, -0.2, 0.5);
-		computer.group.rotation.y = -0.75 * Math.PI;
-		return computer.group;
-	}
+		monitor.position.z = -0.1;
 
+		keyboard.position.set(0, -0.28, 0.23);
+
+		computerCase.position.set(-0.5, -0.6, 0.3);
+		computerCase.rotation.y = 0.76 * Math.PI;
+
+		mouse.position.set(0.45, -0.27, 0.3);
+		wheel.position.set(0.45, -0.27, 0.24);
+		wheel.rotation.set(-0.3 * Math.PI, 0.5 * Math.PI, 0);
+
+		groupTmp.add(monitor);
+		groupTmp.add(keyboard);
+		groupTmp.add(computerCase);
+		groupTmp.add(mouse);
+		groupTmp.add(wheel);
+		groupTmp.position.set(-0.5, -0.15, 0.5);
+		groupTmp.rotation.y = -0.75 * Math.PI;
+		// scene.add(group);
+		group.add(groupTmp);
+		return group;
+	}, loadModel('computer/monitor'), loadModel('computer/keyboard'), loadModel('computer/case'), loadModel('computer/mouse/mouse'), loadModel('computer/mouse/wheel'));
+
+	// createPC();
 	// 工作区
 	var createWorkspace = generateCacheModelLoader(function(meshs, position, rotationY){
 		var group = new THREE.Group();
@@ -246,6 +267,8 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 			createTrashCan().then(setModels);
 			// 添加座椅
 			createChair().then(setModels);
+			// 添加电脑
+			createPC().then(setModels);
 		}
 	}, loadModel('workplace/desk'), loadModel('workplace/wall'));
 	// 靠窗、前面的工作区

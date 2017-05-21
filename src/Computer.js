@@ -2,7 +2,6 @@ define('Computer', [], function(){
 	var material = new THREE.MeshLambertMaterial({color: 0x555555});
 	// 显示器
 	function Monitor(scale){
-		this.group = new THREE.Group();
 		this.front = new THREE.BoxGeometry(6 * scale, 4 * scale, 0.3 * scale);
 		this.frontMesh = new THREE.Mesh(this.front, material);
 
@@ -47,15 +46,22 @@ define('Computer', [], function(){
 		this.baseMesh = new THREE.Mesh(this.base, material);
 		this.baseMesh.position.set(0, -2.8 * scale, -0.4 * scale);
 
-		this.frontMesh.castShadow = true;
-		this.backMesh.castShadow = true;
-		this.barMesh.castShadow = true;
-		this.baseMesh.castShadow = true;
+		var geometry = new THREE.Geometry();
 
-		this.group.add(this.frontMesh);
-		this.group.add(this.backMesh);
-		this.group.add(this.barMesh);
-		this.group.add(this.baseMesh);
+		this.frontMesh.updateMatrix();
+		this.backMesh.updateMatrix();
+		this.barMesh.updateMatrix();
+		this.baseMesh.updateMatrix();
+
+		geometry.merge(this.frontMesh.geometry, this.frontMesh.matrix);
+		geometry.merge(this.backMesh.geometry, this.backMesh.matrix);
+		geometry.merge(this.barMesh.geometry, this.barMesh.matrix);
+		geometry.merge(this.baseMesh.geometry, this.baseMesh.matrix);
+
+		this.mesh = new THREE.Mesh(geometry, material);
+
+		this.mesh.recieveShadow = true;
+		this.mesh.castShadow = true;
 	}
 	// 键盘
 	function Keyboard(scale){
@@ -125,10 +131,12 @@ define('Computer', [], function(){
 		this.mouse = new Mouse(scale * 0.8);
 		this.mouse.group.position.set(scale * 4, scale * -2.7, scale * 2);
 
-		this.group.add(this.monitor.group);
-		this.group.castShadow = true;
+		this.group.add(this.monitor.mesh);
 		this.group.add(this.keyboard.mesh);
 		this.group.add(this.computerCase.mesh);
 		this.group.add(this.mouse.group);
+
+
+
 	};
 });
