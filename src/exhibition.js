@@ -168,15 +168,17 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		return chair.group;
 	}
 	// 垃圾桶
-	function createTrashCan(){
-		var trashCan = new TrashCan();
-		trashCan.group.scale.set(0.05, 0.05, 0.05);
-		trashCan.group.position.set(-1.5, -0.9, 0.6);
-		return trashCan.group;
-	}
+	var createTrashCan = generateCacheModelLoader(function(meshs){
+		var trashCan = meshs.shift();
+		trashCan.scale.set(0.05, 0.05, 0.05);
+		trashCan.position.set(-1.5, -0.85, 0.6);
+		var group = new THREE.Group();
+		group.add(trashCan);
+		return group;
+	}, loadModel('trash_can/trashCan'));
 	// 书架
-	var createBookshelf = generateCacheModelLoader(function(mesh){
-		var bookshelf = mesh.shift();
+	var createBookshelf = generateCacheModelLoader(function(meshs){
+		var bookshelf = meshs.shift();
 		bookshelf.scale.set(0.2, 0.24, 0.24);
 		bookshelf.rotation.y = -0.5 * Math.PI;
 		bookshelf.position.set(-0.27, -0.38, -0.5);
@@ -186,21 +188,21 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	}, loadModel('bookshelf/bookshelf'));
 	// 工作柜
 	var createCabinet = generateCacheModelLoader(function(meshs){
-			var cabinet = meshs[0], wheels = meshs[1];
-			cabinet.scale.set(0.2, 0.2, 0.25);
-			cabinet.position.set(-0.3, -0.525, -0.74);
-			cabinet.rotation.y = -0.5 * Math.PI;
-			
-			wheels.scale.set(0.2, 0.2, 0.25);
-			wheels.position.set(-0.5, -0.93, -0.9);
-			wheels.rotation.y = -0.5 * Math.PI;
-			wheels.rotation.z = -0.5 * Math.PI;
+		var cabinet = meshs[0], wheels = meshs[1];
+		cabinet.scale.set(0.2, 0.2, 0.25);
+		cabinet.position.set(-0.3, -0.525, -0.74);
+		cabinet.rotation.y = -0.5 * Math.PI;
+		
+		wheels.scale.set(0.2, 0.2, 0.25);
+		wheels.position.set(-0.5, -0.93, -0.9);
+		wheels.rotation.y = -0.5 * Math.PI;
+		wheels.rotation.z = -0.5 * Math.PI;
 
-			var group = new THREE.Group();
-			group.add(cabinet);
-			group.add(wheels);
-			return group;
-		}, loadModel('cabinet/cabinet'), loadModel('cabinet/wheels'));
+		var group = new THREE.Group();
+		group.add(cabinet);
+		group.add(wheels);
+		return group;
+	}, loadModel('cabinet/cabinet'), loadModel('cabinet/wheels'));
 	// 工位电脑
 	function createPC(){
 		var computer = new Computer(0.1);
@@ -215,28 +217,26 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	// 工作区
 	var createWorkspace = generateCacheModelLoader(function(meshs, position, rotationY){
 		var group = new THREE.Group();
-		meshs[0].position.x = -0.985;
-		meshs[0].position.z = -0.008;
+		meshs[0].position.set(-0.985, -0.45, -0.008);
 		meshs[0].rotation.z = 0.5 * Math.PI;
+		meshs[1].position.y = -0.45;
 		group.add(meshs[0], meshs[1]);
-		setModels(group, position, rotationY);
+		setModels(group);
+		// 添加工位上的物品
+		addModels();
 
-		function setModels(group, position, rotationY){
-			group.position.set(position.x, -0.45 + position.y, position.z);
+		function setModels(group){
+			group.position.set(position.x, position.y, position.z);
 			group.rotation.y = (-rotationY || 0) * Math.PI;
 			scene.add(group);
+		}
+		function addModels(){
 			// 添加工作柜
-			createCabinet().then(function(group){
-				group.position.set(position.x, position.y, position.z);
-				group.rotation.y = (-rotationY || 0) * Math.PI;
-				scene.add(group);
-			});
+			createCabinet().then(setModels);
 			// 添加书架
-			createBookshelf().then(function(group){
-				group.position.set(position.x, position.y, position.z);
-				group.rotation.y = (-rotationY || 0) * Math.PI;
-				scene.add(group);
-			});
+			createBookshelf().then(setModels);
+			// 添加垃圾桶
+			createTrashCan().then(setModels);
 		}
 	}, loadModel('workplace/desk'), loadModel('workplace/wall'));
 	// 靠窗、前面的工作区

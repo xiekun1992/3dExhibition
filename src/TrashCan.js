@@ -19,9 +19,6 @@ define('TrashCan', [], function(){
 		this.mesh.geometry.computeFaceNormals();
 		this.mesh.geometry.computeVertexNormals();
 
-		this.mesh.recieveShadow = true;
-		this.mesh.castShadow = true;
-
 		this.group.add(this.mesh);
 
 		this.group.recieveShadow = true;
