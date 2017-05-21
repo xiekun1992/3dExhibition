@@ -67,7 +67,7 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	function loadModel(name, cb){
 		var promise = new Promise(function(resolve, reject){
 			var loader = new THREE.ObjectLoader();
-			loader.load('../models/' + name + '.json', 
+			loader.load('./models/' + name + '.json', 
 			function(obj){
 				obj.receieveShadow = true;
 				obj.castShadow = true;

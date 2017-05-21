@@ -2,7 +2,7 @@ define('Door', [], function (){
 	function DoorFrame(){
 		this.geometry = new THREE.BoxGeometry(0.14, 2.2, 1);
 		this.material = new THREE.MeshLambertMaterial({side: THREE.DoubleSide});
-		this.texture = THREE.ImageUtils.loadTexture("../textures/wood-0.jpg");
+		this.texture = THREE.ImageUtils.loadTexture("./textures/wood-0.jpg");
 		// this.texture.wrapS = THREE.RepeatWrapping;
 		// this.texture.wrapT = THREE.RepeatWrapping;
 
@@ -43,7 +43,7 @@ define('Door', [], function (){
 		// }
 
 		this.material = new THREE.MeshLambertMaterial({side: THREE.DoubleSide});
-		this.texture = THREE.ImageUtils.loadTexture("../textures/wood-0.jpg");
+		this.texture = THREE.ImageUtils.loadTexture("./textures/wood-0.jpg");
 		// this.texture.wrapS = THREE.RepeatWrapping;
 		// this.texture.wrapT = THREE.RepeatWrapping;
 
@@ -60,7 +60,7 @@ define('Door', [], function (){
 		this.group = new THREE.Group();
 
 		this.lockGeometry = new THREE.BoxGeometry(0.06, 0.16, 0.07);
-		this.texture = THREE.ImageUtils.loadTexture('../textures/metal.jpg');
+		this.texture = THREE.ImageUtils.loadTexture('./textures/metal.jpg');
 		this.material = new THREE.MeshLambertMaterial({map: this.texture});
 
 		this.lockMesh = new THREE.Mesh(this.lockGeometry, this.material);
