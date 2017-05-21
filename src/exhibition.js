@@ -43,10 +43,15 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 
 	document.body.appendChild(renderer.domElement);
 
+	var stats = new Stats();
+	stats.showPanel(0);
+	document.body.appendChild(stats.dom);
+
 	function render(){
 		camControls.update(clock.getDelta());
 		requestAnimationFrame(render);
 		renderer.render(scene, camera);
+		stats.update();
 	}
 	render();
 
@@ -76,6 +81,24 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		});
 		return promise;
 	}
+	function generateCacheModelLoader(handler, ...promises){
+		var promise = Promise.all(promises)
+		.then(function(meshs){
+			return meshs.map(function(o){
+				return JSON.stringify(o.toJSON());
+			});
+		});
+		return function(...args){
+			return Promise.resolve(promise).then(function(meshStr){
+				var loader = new THREE.ObjectLoader();
+				var meshs = [];
+				meshStr.map(function(o, i){
+					return (meshs[i] = loader.parse(JSON.parse(o)));
+				});
+				return Promise.resolve(handler.apply(null, [meshs, ...args]));
+			});
+		};
+	}
 
 	// 地板
 	var ground = new Ground();
@@ -99,21 +122,19 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		});
 	}
 	createWall();
-	function createWindow(x, y, z){
-		loadModel('window/frame').then(function(obj){
-			obj.scale.set(0.8, 0.6, 0.8);
-			obj.rotation.y = 0.5 * Math.PI;
-			obj.position.set(x, y, z);
-			scene.add(obj);
-		});
-		loadModel('window/glass').then(function(obj){
-			obj.scale.set(0.8, 0.6, 0.8);
-			obj.rotation.y = 0.5 * Math.PI;
-			obj.position.set(x, y, z);
-			obj.castShadow = false;
-			scene.add(obj);
-		});
-	}
+	// 窗户
+	var createWindow = generateCacheModelLoader(function(meshs, x, y, z){
+		var glass = meshs[0], frame = meshs[1];
+		var group = new THREE.Group();
+		glass.castShadow = false;
+		group.add(glass);
+		group.add(frame);
+		group.scale.set(0.8, 0.6, 0.8);
+		group.rotation.y = 0.5 * Math.PI;
+		group.position.set(x, y, z);
+		scene.add(group);
+	}, loadModel('window/glass'), loadModel('window/frame'));
+
 	createWindow(-5.4, 1.37, 0);
 	createWindow(-5.4, 1.37, 4.2);
 	createWindow(-5.4, 1.37, -4.2);
@@ -162,32 +183,22 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		return bookshelf.group;
 	}
 	// 工作柜
-	function createAndCacheCabinet(){
-		var promise = Promise.all([loadModel('cabinet/cabinet'), loadModel('cabinet/wheels')])
-		.then(function(meshs){
-			return [JSON.stringify(meshs[0].toJSON()), JSON.stringify(meshs[1].toJSON())];
-		});
-		return function(){
-			return Promise.resolve(promise).then(function(meshs){
-				var loader = new THREE.ObjectLoader();
-				var cabinet = loader.parse(JSON.parse(meshs[0])), wheels = loader.parse(JSON.parse(meshs[1]));
-				cabinet.scale.set(0.2, 0.2, 0.25);
-				cabinet.position.set(-0.3, -0.525, -0.74);
-				cabinet.rotation.y = -0.5 * Math.PI;
-				
-				wheels.scale.set(0.2, 0.2, 0.25);
-				wheels.position.set(-0.5, -0.93, -0.9);
-				wheels.rotation.y = -0.5 * Math.PI;
-				wheels.rotation.z = -0.5 * Math.PI;
+	var createCabinet = generateCacheModelLoader(function(meshs){
+			var cabinet = meshs[0], wheels = meshs[1];
+			cabinet.scale.set(0.2, 0.2, 0.25);
+			cabinet.position.set(-0.3, -0.525, -0.74);
+			cabinet.rotation.y = -0.5 * Math.PI;
+			
+			wheels.scale.set(0.2, 0.2, 0.25);
+			wheels.position.set(-0.5, -0.93, -0.9);
+			wheels.rotation.y = -0.5 * Math.PI;
+			wheels.rotation.z = -0.5 * Math.PI;
 
-				var group = new THREE.Group();
-				group.add(cabinet);
-				group.add(wheels);
-				return group;
-			});
-		};
-	}
-	var createCabinet = createAndCacheCabinet();
+			var group = new THREE.Group();
+			group.add(cabinet);
+			group.add(wheels);
+			return group;
+		}, loadModel('cabinet/cabinet'), loadModel('cabinet/wheels'));
 	// 工位电脑
 	function createPC(){
 		var computer = new Computer(0.1);
@@ -200,7 +211,14 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	}
 
 	// 工作区
-	function createAndCacheWorkspace(){
+	var createWorkspace = generateCacheModelLoader(function(meshs, position, rotationY){
+		var group = new THREE.Group();
+		meshs[0].position.x = -0.985;
+		meshs[0].position.z = -0.008;
+		meshs[0].rotation.z = 0.5 * Math.PI;
+		group.add(meshs[0], meshs[1]);
+		setModels(group, position, rotationY);
+
 		function setModels(group, position, rotationY){
 			group.position.set(position.x, -0.45 + position.y, position.z);
 			group.rotation.y = (-rotationY || 0) * Math.PI;
@@ -213,46 +231,26 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 				scene.add(group);
 			});
 		}
-		var promise = Promise.all([loadModel('workplace/desk'), loadModel('workplace/wall')])
-							.then(function(meshs){
-								return JSON.stringify([meshs[0].toJSON(), meshs[1].toJSON()]);
-							});
-		return function(position, rotationY){
-			Promise.resolve(promise).then(function(models){
-				var loader = new THREE.ObjectLoader();
-				var meshs = JSON.parse(models);
-				meshs[0] = loader.parse(meshs[0]);
-				meshs[1] = loader.parse(meshs[1]);
-				
-				var group = new THREE.Group();
-				meshs[0].position.x = -0.985;
-				meshs[0].position.z = -0.008;
-				meshs[0].rotation.z = 0.5 * Math.PI;
-				group.add(meshs[0], meshs[1]);
-				setModels(group, position, rotationY);
-			});
-		};
-	}
-	var createWorkspace = createAndCacheWorkspace();
+	}, loadModel('workplace/desk'), loadModel('workplace/wall'));
 	// 靠窗、前面的工作区
 	createWorkspace({x: -1, y: 0, z: 3});
 	createWorkspace({x: -4, y: 0, z: 4}, 0.5);
 
-	createWorkspace({x: -2, y: 0, z: 4}, -0.5);
-	createWorkspace({x: -5, y: 0, z: 5}, -1);
+	// createWorkspace({x: -2, y: 0, z: 4}, -0.5);
+	// createWorkspace({x: -5, y: 0, z: 5}, -1);
 
-	// 靠窗、后面的工作区
-	var distance = -6;
-	createWorkspace({x: -1, y: 0, z: 3 + distance});
-	createWorkspace({x: -4, y: 0, z: 4 + distance}, 0.5);
+	// // 靠窗、后面的工作区
+	// var distance = -6;
+	// createWorkspace({x: -1, y: 0, z: 3 + distance});
+	// createWorkspace({x: -4, y: 0, z: 4 + distance}, 0.5);
 
-	createWorkspace({x: -2, y: 0, z: 4 + distance}, -0.5);
-	createWorkspace({x: -5, y: 0, z: 5 + distance}, -1);
+	// createWorkspace({x: -2, y: 0, z: 4 + distance}, -0.5);
+	// createWorkspace({x: -5, y: 0, z: 5 + distance}, -1);
 
-	// 靠走廊、前面的工作区
-	createWorkspace({x: 5.2, y: 0, z: 1.5});
-	createWorkspace({x: 4.2, y: 0, z: -1.5}, -0.5);	
+	// // 靠走廊、前面的工作区
+	// createWorkspace({x: 5.2, y: 0, z: 1.5});
+	// createWorkspace({x: 4.2, y: 0, z: -1.5}, -0.5);	
 
-	// 靠走廊、后面的工作区
-	createWorkspace({x: 5.2, y: 0, z: -4.1});
+	// // 靠走廊、后面的工作区
+	// createWorkspace({x: 5.2, y: 0, z: -4.1});
 });

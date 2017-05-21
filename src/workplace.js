@@ -12,7 +12,7 @@ define('Workplace', [], function(){
 			this.mesh2.rotation.y = 0.5 * Math.PI;
 			this.mesh2.position.set(-0.976, 0, 1);
 
-			this.geometry1 = new THREE.BoxGeometry(0.05, 0.5, 0.55, 30, 30, 30);
+			this.geometry1 = new THREE.BoxGeometry(0.05, 0.5, 0.55);
 			this.shortMesh1 = new THREE.Mesh(this.geometry1, this.deskMaterial);
 			this.shortMesh1.rotation.y = 0.5 * Math.PI;
 			this.shortMesh1.position.set(-0.27, -0.25, -0.96);
@@ -20,14 +20,14 @@ define('Workplace', [], function(){
 			this.shortMesh2 = new THREE.Mesh(this.geometry1, this.deskMaterial);
 			this.shortMesh2.position.set(-1.93, -0.25, 0.74);
 
-			this.deskGeometry = new THREE.BoxGeometry(0.03, 1.98, 1.98, 30, 30, 30);
+			this.deskGeometry = new THREE.BoxGeometry(0.03, 1.98, 1.98, 20, 20, 20);
 			this.mesh3 = new THREE.Mesh(this.deskGeometry, this.deskMaterial);
 			this.mesh3.rotation.z = 0.5 * Math.PI;
 			this.mesh3.position.set(-0.976, 0, 0);
 			this.deskBSP = new ThreeBSP(this.mesh3);
 
 			// 通过二元运算作出凹陷的桌面
-			this.sphere = new THREE.SphereGeometry(0.6, 50, 50);
+			this.sphere = new THREE.SphereGeometry(0.6, 30, 30);
 			this.sphereMesh = new THREE.Mesh(this.sphere, this.deskMaterial);
 			this.sphereMesh.position.set(-1.176, 0, -0.176);
 			this.sphereBSP = new ThreeBSP(this.sphereMesh);
