@@ -17,9 +17,9 @@ define('Wall', ['Window'], function(Window){
 		this.height = 3; // 2
 		this.width = 0.1;
 		/********************* 墙 *******************/
-		this.rightGeometry = new THREE.BoxGeometry(this.width, this.height, 18, 10, 10, 10);
+		this.rightGeometry = new THREE.BoxGeometry(this.width, this.height, 12.8, 10, 10, 10);
 		this.rightMesh = new THREE.Mesh(this.rightGeometry, this.material);
-		this.rightMesh.position.set(5.3, 0.5, 0);
+		this.rightMesh.position.set(5.3, 0.5, 1.1);
 
 		// 挖出门框的位置
 		var rightWallBSP = new ThreeBSP(this.rightMesh);
@@ -43,9 +43,9 @@ define('Wall', ['Window'], function(Window){
 		this.topMesh.position.set(0, 0.5, -5.25);
 
 		this.leftGroup = new THREE.Group();
-		this.leftGeometry = new THREE.BoxGeometry(this.width * 4, this.height, 18, 20, 20, 20);
+		this.leftGeometry = new THREE.BoxGeometry(this.width * 4, this.height, 12.8, 20, 20, 20);
 		this.leftMesh = new THREE.Mesh(this.leftGeometry, this.material);
-		this.leftMesh.position.set(-5.24 - this.width * 2, 0.5, 0);
+		this.leftMesh.position.set(-5.24 - this.width * 2, 0.5, 1.1);
 		// 挖出窗户的位置
 		function digWindowFrame(distance){
 			var leftWallBSP = new ThreeBSP(this.leftMesh);
@@ -91,13 +91,6 @@ define('Wall', ['Window'], function(Window){
 		this.bottomMesh.rotation.y = 0.5 * Math.PI;
 		// this.bottomMesh.rotation.x = -0.1 * Math.PI;
 		this.bottomMesh.position.set(0, 0.5, 7.45);
-
-		// 合并墙体
-		var leftMeshBSP = new ThreeBSP(this.leftMesh);
-		var rightMeshBSP = new ThreeBSP(this.rightMesh);
-		var topMeshBSP = new ThreeBSP(this.topMesh);
-		var bottomMeshBSP = new ThreeBSP(this.bottomMesh);
-		var wallBSP = leftMeshBSP.union(rightMeshBSP).union(topMeshBSP).union(bottomMeshBSP);
 		
 		// 合并左边墙上的石板
 		var slateBSP = new ThreeBSP(this.leftGroup.children[0]);
@@ -124,17 +117,11 @@ define('Wall', ['Window'], function(Window){
 		this.pillar2Mesh.position.set(-3.75, 0.5, 7.25);
 		this.pillar3Mesh.position.set(5, 0.5, 6.5);
 
-		// 合并墙柱
-		var pillar1BSP = new ThreeBSP(this.pillar1Mesh);
-		var pillar2BSP = new ThreeBSP(this.pillar2Mesh);
-		var pillar3BSP = new ThreeBSP(this.pillar3Mesh);
-		var pillarBSP = pillar1BSP.union(pillar2BSP).union(pillar3BSP);
-
 		/***************** 脚踢线 ******************/
-		
+		var kicklineCombineGeometry = new THREE.Geometry();
 		this.footMaterial = new THREE.MeshLambertMaterial({color: 0x5A2611});
-		this.footRightMesh = new KickLine(18).mesh;
-		this.footRightMesh.position.set(5.24, -0.9, 0);
+		this.footRightMesh = new KickLine(12.6).mesh;
+		this.footRightMesh.position.set(5.24, -0.9, 1.1);
 
 		// 挖出门框的位置
 		var footRightBSP = new ThreeBSP(this.footRightMesh);
@@ -151,19 +138,22 @@ define('Wall', ['Window'], function(Window){
 		this.footTopMesh.position.set(0, -0.9, -5.19);
 		this.footTopMesh.rotation.y = 0.5 * Math.PI;
 
-		this.footLeftMesh = new KickLine(18).mesh;
-		this.footLeftMesh.position.set(-5.22, -0.9, 0);
+		this.footLeftMesh = new KickLine(12.6).mesh;
+		this.footLeftMesh.position.set(-5.22, -0.9, 1.1);
 
 		this.footBottomMesh = new KickLine(10.5).mesh;
 		this.footBottomMesh.position.set(0, -0.9, 7.39);
 		this.footBottomMesh.rotation.y = 0.5 * Math.PI;
 
 		// 合并脚踢线
-		var footLeftBSP = new ThreeBSP(this.footLeftMesh);
-		footRightBSP = new ThreeBSP(this.footRightMesh);
-		var footBottomBSP = new ThreeBSP(this.footBottomMesh);
-		var footTopBSP = new ThreeBSP(this.footTopMesh);
-		var footBSP = footLeftBSP.union(footBottomBSP).union(footRightBSP).union(footTopBSP);
+		this.footRightMesh.updateMatrix();
+		this.footLeftMesh.updateMatrix();
+		this.footBottomMesh.updateMatrix();
+		this.footTopMesh.updateMatrix();
+		kicklineCombineGeometry.merge(this.footRightMesh.geometry, this.footRightMesh.matrix);
+		kicklineCombineGeometry.merge(this.footLeftMesh.geometry, this.footLeftMesh.matrix);
+		kicklineCombineGeometry.merge(this.footBottomMesh.geometry, this.footBottomMesh.matrix);
+		kicklineCombineGeometry.merge(this.footTopMesh.geometry, this.footTopMesh.matrix);
 
 		// 靠窗、后面的柱子脚踢线
 		this.footPillar1LeftMesh = new KickLine(0.4).mesh;
@@ -177,10 +167,12 @@ define('Wall', ['Window'], function(Window){
 		this.footPillar1BottomMesh.rotation.y = 0.5 * Math.PI;
 
 		// 合并脚踢线
-		var footPillar1LeftBSP = new ThreeBSP(this.footPillar1LeftMesh);
-		var footPillar1RightBSP = new ThreeBSP(this.footPillar1RightMesh);
-		var footPillar1BottomBSP = new ThreeBSP(this.footPillar1BottomMesh);
-		var footPillar1BSP = footPillar1LeftBSP.union(footPillar1BottomBSP).union(footPillar1RightBSP);
+		this.footPillar1LeftMesh.updateMatrix();
+		this.footPillar1RightMesh.updateMatrix();
+		this.footPillar1BottomMesh.updateMatrix();
+		kicklineCombineGeometry.merge(this.footPillar1LeftMesh.geometry, this.footPillar1LeftMesh.matrix);
+		kicklineCombineGeometry.merge(this.footPillar1RightMesh.geometry, this.footPillar1RightMesh.matrix);
+		kicklineCombineGeometry.merge(this.footPillar1BottomMesh.geometry, this.footPillar1BottomMesh.matrix);
 
 		// 靠窗、前面的柱子脚踢线
 		this.footPillar2LeftMesh = new KickLine(0.4).mesh;
@@ -194,10 +186,12 @@ define('Wall', ['Window'], function(Window){
 		this.footPillar2BottomMesh.rotation.y = 0.5 * Math.PI;
 
 		// 合并脚踢线
-		var footPillar2LeftBSP = new ThreeBSP(this.footPillar2LeftMesh);
-		var footPillar2RightBSP = new ThreeBSP(this.footPillar2RightMesh);
-		var footPillar2BottomBSP = new ThreeBSP(this.footPillar2BottomMesh);
-		var footPillar2BSP = footPillar2LeftBSP.union(footPillar2BottomBSP).union(footPillar2RightBSP);
+		this.footPillar2LeftMesh.updateMatrix();
+		this.footPillar2RightMesh.updateMatrix();
+		this.footPillar2BottomMesh.updateMatrix();
+		kicklineCombineGeometry.merge(this.footPillar2LeftMesh.geometry, this.footPillar2LeftMesh.matrix);
+		kicklineCombineGeometry.merge(this.footPillar2RightMesh.geometry, this.footPillar2RightMesh.matrix);
+		kicklineCombineGeometry.merge(this.footPillar2BottomMesh.geometry, this.footPillar2BottomMesh.matrix);
 
 		// 靠门、前面的柱子脚踢线
 		this.footPillar3LeftMesh = new KickLine(1.9).mesh;
@@ -208,24 +202,34 @@ define('Wall', ['Window'], function(Window){
 		this.footPillar3BottomMesh.rotation.y = 0.5 * Math.PI;
 
 		// 合并脚踢线
-		var footPillar3LeftBSP = new ThreeBSP(this.footPillar3LeftMesh);
-		var footPillar3BottomBSP = new ThreeBSP(this.footPillar3BottomMesh);
-		var footPillar3BSP = footPillar3LeftBSP.union(footPillar3BottomBSP);
+		this.footPillar3LeftMesh.updateMatrix();
+		this.footPillar3BottomMesh.updateMatrix();
+		kicklineCombineGeometry.merge(this.footPillar3LeftMesh.geometry, this.footPillar3LeftMesh.matrix);
+		kicklineCombineGeometry.merge(this.footPillar3BottomMesh.geometry, this.footPillar3BottomMesh.matrix);
 
 		// 合并全部脚踢线
-		var footPillarBSP = footPillar1BSP.union(footPillar3BSP).union(footPillar2BSP).union(footBSP);
-		var footPillarMesh = footPillarBSP.toMesh();
-		footPillarMesh.material = this.footMaterial;
-		footPillarMesh.geometry.computeVertexNormals();
-		footPillarMesh.geometry.computeFaceNormals();
-
+		var footPillarMesh = new THREE.Mesh(kicklineCombineGeometry, this.footMaterial);
 		this.group.add(footPillarMesh);
 
 		// 合并墙体和墙柱
-		var wallMesh = wallBSP.union(pillarBSP).toMesh();
-		wallMesh.material = this.material;
-		wallMesh.geometry.computeVertexNormals();
-		wallMesh.geometry.computeFaceNormals();
+		var wallCombineGeometry = new THREE.Geometry();
+		this.rightMesh.updateMatrix();
+		this.leftMesh.updateMatrix();
+		this.topMesh.updateMatrix();
+		this.bottomMesh.updateMatrix();
+		wallCombineGeometry.merge(this.rightMesh.geometry, this.rightMesh.matrix);
+		wallCombineGeometry.merge(this.leftMesh.geometry, this.leftMesh.matrix);
+		wallCombineGeometry.merge(this.topMesh.geometry, this.topMesh.matrix);
+		wallCombineGeometry.merge(this.bottomMesh.geometry, this.bottomMesh.matrix);
+
+		this.pillar1Mesh.updateMatrix();
+		this.pillar2Mesh.updateMatrix();
+		this.pillar3Mesh.updateMatrix();
+		wallCombineGeometry.merge(this.pillar1Mesh.geometry, this.pillar1Mesh.matrix);
+		wallCombineGeometry.merge(this.pillar2Mesh.geometry, this.pillar2Mesh.matrix);
+		wallCombineGeometry.merge(this.pillar3Mesh.geometry, this.pillar3Mesh.matrix);
+
+		wallMesh = new THREE.Mesh(wallCombineGeometry, this.material);
 		
 		this.group.add(wallMesh);
 		this.group.add(slateMesh);

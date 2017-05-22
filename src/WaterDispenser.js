@@ -47,21 +47,31 @@ define('WaterDispenser', [], function(){
 		tmpMesh.position.set(0, -5, 3);
 
 		var switcherGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.1);
-		var switcherMesh = new THREE.Mesh(switcherGeometry, this.material);
+		var switcher1Mesh = new THREE.Mesh(switcherGeometry, this.material);
+		var switcher2Mesh = new THREE.Mesh(switcherGeometry, this.material);
 
-		var topMeshBSP = new ThreeBSP(this.topMesh);
 		var tmpMeshBSP = new ThreeBSP(tmpMesh);
 		var bodyMeshBSP = new ThreeBSP(this.bodyMesh);
 
-		switcherMesh.position.set(0.8, -4.2, 2);
-		var switcherMesh1BSP = new ThreeBSP(switcherMesh);
-		switcherMesh.position.set(-0.8, -4.2, 2);
-		var switcherMesh2BSP = new ThreeBSP(switcherMesh);
+		switcher1Mesh.position.set(0.8, -4.2, 2);
+		switcher2Mesh.position.set(-0.8, -4.2, 2);
 
-		this.bodyMesh = bodyMeshBSP.subtract(tmpMeshBSP).union(topMeshBSP).union(switcherMesh1BSP).union(switcherMesh2BSP).toMesh();
+		this.bodyMesh = bodyMeshBSP.subtract(tmpMeshBSP).toMesh();
 		this.bodyMesh.material = this.material;
 		this.bodyMesh.geometry.computeVertexNormals();
 		this.bodyMesh.geometry.computeFaceNormals();
+
+		var geometry = new THREE.Geometry();
+		this.topMesh.updateMatrix();
+		this.bodyMesh.updateMatrix();
+		switcher1Mesh.updateMatrix();
+		switcher2Mesh.updateMatrix();
+		geometry.merge(this.topMesh.geometry, this.topMesh.matrix);
+		geometry.merge(this.bodyMesh.geometry, this.bodyMesh.matrix);
+		geometry.merge(switcher1Mesh.geometry, switcher1Mesh.matrix);
+		geometry.merge(switcher2Mesh.geometry, switcher2Mesh.matrix);
+
+		this.bodyMesh = new THREE.Mesh(geometry, this.material);
 
 		this.bodyMesh.recieveShadow = true;
 		this.bodyMesh.castShadow = true;

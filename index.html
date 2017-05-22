@@ -8,9 +8,18 @@
 		margin: 0;
 		overflow: hidden;
 	}
+	#controlsFrame{
+		position: fixed;
+		top: 0;
+		right: 0;
+		height: 100%;
+	}
 	</style>
 </head>
 <body>
+	<div id="view"></div>
+	<iframe id="controlsFrame" src="./tools/controls.html" frameborder="0"></iframe>
+
 	<script src="./libs/three.js"></script>
 	<script src="./libs/FirstPersonControls.js"></script>
 	<script src="./libs/TrackballControls.js"></script>

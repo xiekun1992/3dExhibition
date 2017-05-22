@@ -41,34 +41,40 @@ define('Workplace', [], function(){
 			this.tmpMesh2.position.set(-2, 0, -0.1);
 			this.tmp2BSP = new ThreeBSP(this.tmpMesh2);
 
-			var shortMesh1BSP = new ThreeBSP(this.shortMesh1);
-			var shortMesh2BSP = new ThreeBSP(this.shortMesh2);
-
 			var tmpBSP = this.tmp1BSP.union(this.tmp2BSP);
 			var resultBSP = this.deskBSP.subtract(this.sphereBSP)
-										.subtract(tmpBSP)
-										.union(shortMesh1BSP)
-										.union(shortMesh2BSP);
+										.subtract(tmpBSP);
 			var resultMesh = resultBSP.toMesh();
 			resultMesh.material = this.deskMaterial;
 			resultMesh.geometry.computeFaceNormals();
 			resultMesh.geometry.computeVertexNormals();
 
-			resultMesh.castShadow = true;
-			resultMesh.receiveShadow = true;
+			var deskGeometry = new THREE.Geometry();
+			resultMesh.updateMatrix();
+			this.shortMesh1.updateMatrix();
+			this.shortMesh2.updateMatrix();
+			deskGeometry.merge(resultMesh.geometry, resultMesh.matrix);
+			deskGeometry.merge(this.shortMesh1.geometry, this.shortMesh1.matrix);
+			deskGeometry.merge(this.shortMesh2.geometry, this.shortMesh2.matrix);
+
+			var deskMesh = new THREE.Mesh(deskGeometry, this.deskMaterial);
+			deskMesh.castShadow = true;
+			deskMesh.receiveShadow = true;
 			
-			var mesh1BSP = new ThreeBSP(this.mesh1);
-			var mesh2BSP = new ThreeBSP(this.mesh2);
+			var wallGeometry = new THREE.Geometry();
+			this.mesh1.updateMatrix();
+			this.mesh2.updateMatrix();
+			wallGeometry.merge(this.mesh1.geometry, this.mesh1.matrix);
+			wallGeometry.merge(this.mesh2.geometry, this.mesh2.matrix);
 
-			var wallMesh = mesh1BSP.union(mesh2BSP).toMesh();
-			wallMesh.material = this.material;
-			wallMesh.geometry.computeFaceNormals();
-			wallMesh.geometry.computeVertexNormals();
-
+			var wallMesh = new THREE.Mesh(wallGeometry, this.material);
 			wallMesh.castShadow = true;
 			wallMesh.receiveShadow = true;
 
+
+
+		// console.log(JSON.stringify(wallMesh.toJSON()));
 			this.group.add(wallMesh);
-			this.group.add(resultMesh);
+			this.group.add(deskMesh);
 	};
 });

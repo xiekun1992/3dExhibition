@@ -12,8 +12,8 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 	renderer.setSize(width, height);
-	renderer.setClearColor(0xffffff);
-	renderer.shadowMapEnabled = true;
+	renderer.setClearColor(0xeeeeee);
+	document.getElementById("view").appendChild(renderer.domElement);
 
 	var clock = new THREE.Clock();
 	// var camControls = new THREE.FirstPersonControls(camera);
@@ -30,22 +30,96 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	camControls.rotateSpeed = 1;
 	camControls.zoomSpeed = 1;
 	camControls.panSpeed = 1;
-	// camControls.staticMoving = true;
+	camControls.staticMoving = true;
 
 	var amLight = new THREE.AmbientLight(0x888888);
+	amLight.name = "amLight";
 	scene.add(amLight);
 
-	var spotLight = new THREE.SpotLight(0xdddddd, 1);
-	// var spotLight = new THREE.SpotLight(0xfbdf75, 1);
-	spotLight.position.set(0, 20, 0);
-	spotLight.castShadow = true;
-	scene.add(spotLight);
+	var spotLightInside = new THREE.SpotLight(0xdddddd);
+	spotLightInside.name = "spotLightInside";
+	spotLightInside.shadow.mapSize.width = 10240;
+	spotLightInside.shadow.mapSize.height = 10240;
 
-	document.body.appendChild(renderer.domElement);
+	// spotLightInside.shadow.camera.near = 500;
+	// spotLightInside.shadow.camera.far = 4000;
+	spotLightInside.shadow.camera.fov = 30;
+	spotLightInside.position.set(0, 20, 0);
+	// spotLightInside.castShadow = true;
+	scene.add(spotLightInside);
+	var directLight = new THREE.DirectionalLight(0xaaaaaa);
+	directLight.name = "directLight";
+	directLight.position.set(-5, 20, 0);
+	// directLight.castShadow = true;
+	scene.add(directLight);
 
+
+	// 帧率显示
 	var stats = new Stats();
 	stats.showPanel(0);
 	document.body.appendChild(stats.dom);
+	// 光源控制
+	var controls = new function(){
+		this.enableShadow = false;
+		this.ambientLight = true;
+
+		this.spotLightEnable = true;
+		this.spotLightX = spotLightInside.position.x;
+		this.spotLightY = spotLightInside.position.y;
+		this.spotLightZ = spotLightInside.position.z;
+
+		this.directionalLightEnable = true;
+		this.directionalLightX = directLight.position.x;
+		this.directionalLightY = directLight.position.y;
+		this.directionalLightZ = directLight.position.z;
+	};
+	var controlsFn = {
+		changeAmLight: function(enable){
+			var light = scene.getObjectByName("amLight");
+			if(!enable && light){
+				scene.remove(light);
+			}else{
+				scene.add(amLight);
+			}
+		},
+		changeSpotLight: function(enable){
+			var light = scene.getObjectByName("spotLightInside");
+			if(!enable && light){
+				scene.remove(light);
+			}else{
+				scene.add(spotLightInside);
+			}
+		},
+		changeSpotLightPosition: function(position){
+			position.x && (spotLightInside.position.x = position.x);
+			position.y && (spotLightInside.position.y = position.y);
+			position.z && (spotLightInside.position.z = position.z);
+		},
+		changeDirectLight: function(enable){
+			var light = scene.getObjectByName("directLight");
+			if(!enable && light){
+				scene.remove(light);
+			}else{
+				scene.add(directLight);
+			}
+		},
+		changeDirectLightPosition: function(position){
+			position.x && (directLight.position.x = position.x);
+			position.y && (directLight.position.y = position.y);
+			position.z && (directLight.position.z = position.z);
+		},
+		changeShadow: function(enable){
+			spotLightInside.castShadow = enable;
+			directLight.castShadow = enable;
+		}
+	};
+	// 通过iframe解决相机动画导致光源控制界面使用不正常的问题
+	document.getElementById('controlsFrame').contentWindow.postMessage(controls, location.origin);
+	window.addEventListener('message', function(e){
+		if(e.origin === location.origin){
+			controlsFn[e.data.fn].call(null, e.data.param);
+		}
+	});
 
 	function render(){
 		camControls.update(clock.getDelta());
@@ -103,11 +177,11 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	// 墙
 	function createWall(){
 		loadModel('wall/wall').then(function(obj){
-			obj.position.set(-5.4, 0.5, 0);
+			// obj.position.set(-5.4, 0, 0);
 			scene.add(obj);
 		});
 		loadModel('wall/kick_line').then(function(obj){
-			obj.position.set(-4.25, -0.9, -5);
+			// obj.position.set(-4.25, -0.9, -5);
 			scene.add(obj);
 		});
 		loadModel('wall/slate').then(function(obj){
@@ -140,13 +214,13 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	function createWaterDispenser(){
 		loadModel('water_dispenser/waterDispenser').then(function(obj){
 			obj.scale.set(0.1, 0.1, 0.1);
-			obj.position.set(1, -0.5, 7.1);
+			obj.position.set(1, 0.3, 7.1);
 			obj.rotation.y = Math.PI;
 			scene.add(obj);
 		});
 		loadModel('water_dispenser/bucket').then(function(obj){
 			obj.scale.set(0.1, 0.1, 0.1);
-			obj.position.set(1, 0.22, 7.1);
+			obj.position.set(1, 0.3, 7.1);
 			obj.rotation.y = Math.PI;
 			obj.castShadow = false;
 			scene.add(obj);
@@ -245,9 +319,10 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	// 工作区
 	var createWorkspace = generateCacheModelLoader(function(meshs, position, rotationY){
 		var group = new THREE.Group();
-		meshs[0].position.set(-0.985, -0.45, -0.008);
-		meshs[0].rotation.z = 0.5 * Math.PI;
+		meshs[0].position.set(0, -0.45, -0.008);
+		// meshs[0].rotation.z = 0.5 * Math.PI;
 		meshs[1].position.y = -0.45;
+		// meshs[1].receieveShadow = false;
 		group.add(meshs[0], meshs[1]);
 		setModels(group);
 		// 添加工位上的物品
