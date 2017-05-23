@@ -78,27 +78,28 @@ define('Door', [], function (){
 		this.doorknobMesh2 = new THREE.Mesh(this.doorknobGeometry2, this.material);
 		this.doorknobMesh2.position.set(0.018, 0, -0.31);
 
-		var doorknobAxisBSP = new ThreeBSP(this.doorknobAxisMesh);
-		var doorknob1BSP = new ThreeBSP(this.doorknobMesh1);
-		var doorknob2BSP = new ThreeBSP(this.doorknobMesh2);
+		// var doorknobAxisBSP = new ThreeBSP(this.doorknobAxisMesh);
+		// var doorknob1BSP = new ThreeBSP(this.doorknobMesh1);
+		// var doorknob2BSP = new ThreeBSP(this.doorknobMesh2);
 
-		var tmp = doorknobAxisBSP.union(doorknob1BSP).union(doorknob2BSP);
-		this.doorknobMesh = tmp.toMesh();
-		this.doorknobMesh.material = this.material;
-		this.doorknobMesh.geometry.computeVertexNormals();
-		this.doorknobMesh.geometry.computeFaceNormals();
+		// var tmp = doorknobAxisBSP.union(doorknob1BSP).union(doorknob2BSP);
+		// this.doorknobMesh = tmp.toMesh();
+		// this.doorknobMesh.material = this.material;
+		// this.doorknobMesh.geometry.computeVertexNormals();
+		// this.doorknobMesh.geometry.computeFaceNormals();
 
-		this.lockMesh.recieveShadow = true;
-		this.lockMesh.castShadow = true;
-		this.doorknobAxisMesh.recieveShadow = true;
-		this.doorknobAxisMesh.castShadow = true;
-		this.doorknobMesh.recieveShadow = true;
-		this.doorknobMesh.castShadow = true;
+		var geometry = new THREE.Geometry();
+		this.doorknobAxisMesh.updateMatrix();
+		this.doorknobMesh1.updateMatrix();
+		this.doorknobMesh2.updateMatrix();
+		this.lockMesh.updateMatrix();
 
+		geometry.merge(this.doorknobAxisMesh.geometry, this.doorknobAxisMesh.matrix);
+		geometry.merge(this.doorknobMesh1.geometry, this.doorknobMesh1.matrix);
+		geometry.merge(this.doorknobMesh2.geometry, this.doorknobMesh2.matrix);
+		geometry.merge(this.lockMesh.geometry, this.lockMesh.matrix);
 
-		this.group.add(this.lockMesh);
-		this.group.add(this.doorknobAxisMesh);
-		this.group.add(this.doorknobMesh);
+		this.mesh = new THREE.Mesh(geometry, this.material);
 	}
 
 	function Door(){
@@ -108,9 +109,18 @@ define('Door', [], function (){
 		var doorFrame = new DoorFrame();
 		var doorknob = new Doorknob();
 
-		this.group.add(innerDoor.mesh);
+		var group = new THREE.Group();
+		group.add(innerDoor.mesh);
+		group.add(doorknob.mesh);
+
+		var container = new THREE.Object3D();
+		group.translateZ(-0.42);
+		container.add(group);
+		container.translateZ(0.42);
+		// container.rotation.y = 0.5 * Math.PI;
+
+		this.group.add(container);
 		this.group.add(doorFrame.mesh);
-		this.group.add(doorknob.group);
 	}
 
 	return Door;

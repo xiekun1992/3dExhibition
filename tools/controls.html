@@ -25,13 +25,13 @@
 			spotLightGUI.add(controls, 'spotLightEnable').onChange(function(){
 				applySettings('changeSpotLight', controls.spotLightEnable);
 			});
-			spotLightGUI.add(controls, 'spotLightX', 0, 30).onChange(function(){
+			spotLightGUI.add(controls, 'spotLightX', -30, 30).onChange(function(){
 				applySettings('changeSpotLightPosition', {x: controls.spotLightX});
 			});
-			spotLightGUI.add(controls, 'spotLightY', 0, 30).onChange(function(){
+			spotLightGUI.add(controls, 'spotLightY', -30, 30).onChange(function(){
 				applySettings('changeSpotLightPosition', {y: controls.spotLightY});
 			});
-			spotLightGUI.add(controls, 'spotLightZ', 0, 30).onChange(function(){
+			spotLightGUI.add(controls, 'spotLightZ', -30, 30).onChange(function(){
 				applySettings('changeSpotLightPosition', {z: controls.spotLightZ});
 			});
 
@@ -39,13 +39,13 @@
 			directionalLightGUI.add(controls, 'directionalLightEnable').onChange(function(){
 				applySettings('changeDirectLight', controls.directionalLightEnable);
 			});
-			directionalLightGUI.add(controls, 'directionalLightX', 0, 30).onChange(function(){
+			directionalLightGUI.add(controls, 'directionalLightX', -30, 30).onChange(function(){
 				applySettings('changeDirectLightPosition', {x: controls.directionalLightX});
 			});
-			directionalLightGUI.add(controls, 'directionalLightY', 0, 30).onChange(function(){
+			directionalLightGUI.add(controls, 'directionalLightY', -30, 30).onChange(function(){
 				applySettings('changeDirectLightPosition', {y: controls.directionalLightY});
 			});
-			directionalLightGUI.add(controls, 'directionalLightZ', 0, 30).onChange(function(){
+			directionalLightGUI.add(controls, 'directionalLightZ', -30, 30).onChange(function(){
 				applySettings('changeDirectLightPosition', {z: controls.directionalLightZ});
 			});
 		}

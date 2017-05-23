@@ -30,7 +30,7 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	camControls.rotateSpeed = 1;
 	camControls.zoomSpeed = 1;
 	camControls.panSpeed = 1;
-	camControls.staticMoving = true;
+	// camControls.staticMoving = true;
 
 	var amLight = new THREE.AmbientLight(0x888888);
 	amLight.name = "amLight";
@@ -210,6 +210,24 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 	var door = new Door();
 	door.group.position.set(5.34, 0.1, 4);
 	scene.add(door.group);
+	var doorOpen = false;
+	// 添加开门动作
+	window.addEventListener("click", function onDocumentMouseDown(event) {
+        var vector = new THREE.Vector3(( event.clientX / window.innerWidth ) * 2 - 1, -( event.clientY / window.innerHeight ) * 2 + 1, 0.5);
+        vector = vector.unproject(camera);
+        var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+        var intersects = raycaster.intersectObjects([door.group.children[0].children[0].children[0], door.group.children[0].children[0].children[1]]);
+
+        if (intersects.length > 0) {
+            // console.log(intersects[0]);
+            // intersects[0].object.material.transparent = true;
+            // intersects[0].object.material.opacity = 0.1;
+            doorOpen = !doorOpen;
+            var rotation = doorOpen?(0.65 * Math.PI): 0;
+            door.group.children[0].rotation.y = rotation;
+        }
+    }, false);
+
 	// 饮水机
 	function createWaterDispenser(){
 		loadModel('water_dispenser/waterDispenser').then(function(obj){
