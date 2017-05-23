@@ -68,10 +68,10 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		this.spotLightY = spotLightInside.position.y;
 		this.spotLightZ = spotLightInside.position.z;
 
-		this.directionalLightEnable = true;
-		this.directionalLightX = directLight.position.x;
-		this.directionalLightY = directLight.position.y;
-		this.directionalLightZ = directLight.position.z;
+		this.directLightEnable = true;
+		this.directLightX = directLight.position.x;
+		this.directLightY = directLight.position.y;
+		this.directLightZ = directLight.position.z;
 	};
 	var controlsFn = {
 		changeAmLight: function(enable){
@@ -113,12 +113,9 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 			directLight.castShadow = enable;
 		}
 	};
-	// 通过iframe解决相机动画导致光源控制界面使用不正常的问题
-	document.getElementById('controlsFrame').contentWindow.postMessage(controls, location.origin);
-	window.addEventListener('message', function(e){
-		if(e.origin === location.origin){
-			controlsFn[e.data.fn].call(null, e.data.param);
-		}
+	require(['controlsGUI'], function(controlsGUI){
+	// console.log(controlsGUI)
+		controlsGUI(controls, controlsFn);
 	});
 
 	function render(){

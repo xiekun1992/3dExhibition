@@ -18,17 +18,18 @@
 </head>
 <body>
 	<div id="view"></div>
-	<iframe id="controlsFrame" src="./tools/controls.html" frameborder="0"></iframe>
+	
 
 	<script src="./libs/three.js"></script>
 	<script src="./libs/FirstPersonControls.js"></script>
 	<script src="./libs/TrackballControls.js"></script>
 	<script src="./libs/ThreeBSP.js"></script>
 	<script src="./libs/stats.js"></script>
+	<script src="./libs/dat.gui.js"></script>
 	
 	<script src="./libs/require.js"></script>
 	<script>
-	requirejs.config({baseUrl: './src'});
+	requirejs.config({baseUrl: './src', waitSeconds: 30});
 	require(['Exhibition']);
 	</script>
 </body>
