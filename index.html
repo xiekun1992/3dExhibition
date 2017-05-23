@@ -8,17 +8,23 @@
 		margin: 0;
 		overflow: hidden;
 	}
-	#controlsFrame{
+	.load-state{
 		position: fixed;
-		top: 0;
-		right: 0;
-		height: 100%;
+		top: 50px;
+		left: 0;
+	}
+	.load-state>ul{
+		list-style: none;
+		padding-left: 10px;
+		font-size: 12px;
 	}
 	</style>
 </head>
 <body>
 	<div id="view"></div>
-	
+	<div class="load-state">
+		<ul id="process"></ul>
+	</div>
 
 	<script src="./libs/three.js"></script>
 	<script src="./libs/FirstPersonControls.js"></script>

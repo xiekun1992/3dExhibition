@@ -5,7 +5,7 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 
 	var scene = new THREE.Scene();
 	var camera = new THREE.PerspectiveCamera(45, width / height, 0.1 ,1000);
-	camera.position.set(-10, 0, 0);
+	camera.position.set(-20, 0, 0);
 	camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 	var renderer = new THREE.WebGLRenderer({antiAlias: true});
@@ -135,8 +135,20 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 
 	/************************** 添加模型 ***************************/
 
+	var processContainer = document.getElementById('process');
 	function loadModel(name, cb){
 		var promise = new Promise(function(resolve, reject){
+			var processBar = document.createElement('li');
+			var action = document.createElement('span');
+			var desc = document.createElement('span');
+			var state = document.createElement('span');
+			action.innerText = "等待";
+			desc.innerText = "载入" + name + "模型：";
+			processBar.appendChild(action);
+			processBar.appendChild(desc);
+			processBar.appendChild(state);
+			processContainer.appendChild(processBar);
+
 			var loader = new THREE.ObjectLoader();
 			loader.load('./models/' + name + '.json', 
 			function(obj){
@@ -144,7 +156,13 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 				obj.castShadow = true;
 				resolve(obj);
 			}, function ( xhr ) {
+				action.innerText = "正在";
 		        // console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+		        if(xhr.loaded != xhr.total){
+		        	state.innerText = (xhr.loaded / xhr.total * 100).toFixed(2) + '%';
+		        }else{
+		        	processContainer.removeChild(processBar);
+		        }
 		    }, function ( xhr ) {
 		        console.error( 'An error happened' );
 		        reject(null);
