@@ -141,9 +141,9 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 			var processBar = document.createElement('li');
 			var action = document.createElement('span');
 			var desc = document.createElement('span');
-			var state = document.createElement('span');
+			var state = document.createElement('b');
 			action.innerText = "等待";
-			desc.innerText = "载入" + name + "模型：";
+			desc.innerText = "载入" + name + "模型 ";
 			processBar.appendChild(action);
 			processBar.appendChild(desc);
 			processBar.appendChild(state);
@@ -348,24 +348,30 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 		return group;
 	}, loadModel('computer/monitor'), loadModel('computer/keyboard'), loadModel('computer/case'), loadModel('computer/mouse/mouse'), loadModel('computer/mouse/wheel'));
 
-	// createPC();
 	// 工作区
-	var createWorkspace = generateCacheModelLoader(function(meshs, position, rotationY){
+	var createWorkspaceDesk = generateCacheModelLoader(function(meshs, position, rotationY, setModels){
 		var group = new THREE.Group();
 		meshs[0].position.set(0, -0.45, -0.008);
-		// meshs[0].rotation.z = 0.5 * Math.PI;
-		meshs[1].position.y = -0.45;
-		// meshs[1].receieveShadow = false;
-		group.add(meshs[0], meshs[1]);
+		group.add(meshs[0]);
 		setModels(group);
-		// 添加工位上的物品
-		addModels();
-
+	}, loadModel('workplace/desk'));
+	var createWorkspaceWall = generateCacheModelLoader(function(meshs, position, rotationY, setModels){
+		var group = new THREE.Group();
+		meshs[0].position.y = -0.45;
+		group.add(meshs[0]);
+		setModels(group);
+	}, loadModel('workplace/wall'));
+	var createWorkspace = function(position, rotationY){
 		function setModels(group){
 			group.position.set(position.x, position.y, position.z);
 			group.rotation.y = (-rotationY || 0) * Math.PI;
 			scene.add(group);
 		}
+		createWorkspaceDesk(position, rotationY, setModels);
+		createWorkspaceWall(position, rotationY, setModels);
+		// 添加工位上的物品
+		addModels();
+
 		function addModels(){
 			// 添加工作柜
 			createCabinet().then(setModels);
@@ -378,7 +384,7 @@ define('Exhibition', ['Ground', 'Door', 'Wall', 'Workplace', 'Computer', 'Cabine
 			// 添加电脑
 			createPC().then(setModels);
 		}
-	}, loadModel('workplace/desk'), loadModel('workplace/wall'));
+	};
 	// 靠窗、前面的工作区
 	createWorkspace({x: -1, y: 0, z: 3});
 	createWorkspace({x: -4, y: 0, z: 4}, 0.5);
